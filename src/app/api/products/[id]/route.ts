@@ -2,13 +2,13 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import Product from "@/models/Product";
 import { verifyToken } from "@/lib/auth";
-
 import { cookies } from "next/headers";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     await connectDB();
-    const product = await Product.findById(params.id);
+    const product = await Product.findById(id);
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
@@ -18,9 +18,11 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const token = cookies().get("token")?.value;
+    const { id } = await params;
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -31,7 +33,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     }
 
     await connectDB();
-    const product = await Product.findByIdAndDelete(params.id);
+    const product = await Product.findByIdAndDelete(id);
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }

@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import CategoryDropdown from "@/components/CategoryDropdown";
 import ImageUpload from "@/components/ImageUpload";
-import { Plus, Trash2, LayoutDashboard, Package, Loader2, X, DollarSign, FileText, Upload } from "lucide-react";
+import { Plus, Trash2, LayoutDashboard, Package, Loader2, X, FileText, Upload, DollarSign, Image as ImageIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
 
 const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
@@ -19,7 +20,7 @@ const AdminDashboard = () => {
     price: "",
     category: "",
     description: "",
-    image: "",
+    images: [] as string[],
   });
 
   useEffect(() => {
@@ -34,6 +35,7 @@ const AdminDashboard = () => {
       setProducts(data);
     } catch (err) {
       console.error(err);
+      toast.error("Failed to fetch products");
     } finally {
       setLoading(false);
     }
@@ -41,12 +43,12 @@ const AdminDashboard = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.image) {
-      alert("Please upload an image first");
+    if (formData.images.length === 0) {
+      toast.error("Please upload at least one image");
       return;
     }
     if (!formData.category) {
-      alert("Please select a category");
+      toast.error("Please select a category");
       return;
     }
 
@@ -60,15 +62,16 @@ const AdminDashboard = () => {
       });
 
       if (res.ok) {
+        toast.success("Product published successfully");
         setIsModalOpen(false);
-        setFormData({ name: "", price: "", category: "", description: "", image: "" });
+        setFormData({ name: "", price: "", category: "", description: "", images: [] });
         fetchProducts();
       } else {
         const data = await res.json();
-        alert(data.error || "Failed to add product");
+        toast.error(data.error || "Failed to add product");
       }
     } catch (err) {
-      alert("Failed to add product");
+      toast.error("Failed to add product");
     } finally {
       setSubmitting(false);
     }
@@ -80,10 +83,11 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
       if (res.ok) {
+        toast.success("Product deleted");
         setProducts(products.filter((p: any) => p._id !== id));
       }
     } catch (err) {
-      alert("Delete failed");
+      toast.error("Delete failed");
     }
   };
 
@@ -102,7 +106,7 @@ const AdminDashboard = () => {
                <LayoutDashboard size={20} />
                <span className="text-sm font-bold uppercase tracking-widest">Admin Control</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Product Inventory</h1>
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white">Product Inventory</h1>
           </div>
 
           <button
@@ -170,8 +174,13 @@ const AdminDashboard = () => {
                     >
                       <td className="p-6">
                         <div className="flex items-center gap-4">
-                          <div className="w-14 h-14 rounded-xl overflow-hidden bg-white/5 border border-white/10 p-1 group-hover:border-luxury-gold/50 transition-colors">
-                            <img src={product.image} alt="" className="w-full h-full object-contain" />
+                          <div className="w-14 h-14 rounded-xl overflow-hidden bg-white/5 border border-white/10 p-1 group-hover:border-luxury-gold/50 transition-colors relative">
+                            <img src={product.images?.[0] || "/placeholder.png"} alt="" className="w-full h-full object-contain" />
+                            {product.images?.length > 1 && (
+                              <div className="absolute bottom-0 right-0 bg-luxury-gold text-black text-[8px] font-black px-1 rounded-tl-md">
+                                +{product.images.length - 1}
+                              </div>
+                            )}
                           </div>
                           <span className="font-bold text-white group-hover:text-luxury-gold transition-colors">{product.name}</span>
                         </div>
@@ -223,7 +232,7 @@ const AdminDashboard = () => {
               initial={{ opacity: 0, y: 100, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 100, scale: 0.95 }}
-              className="glass-card w-full max-w-4xl relative z-10 p-8 md:p-12 border-white/20 shadow-[0_0_100px_rgba(212,175,55,0.1)]"
+              className="glass-card w-full max-w-5xl relative z-10 p-8 md:p-12 border-white/20 shadow-[0_0_100px_rgba(212,175,55,0.1)]"
             >
               <div className="absolute top-6 right-6">
                  <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-white/10 rounded-full transition-all hover:rotate-90">
@@ -236,7 +245,7 @@ const AdminDashboard = () => {
                     <Plus className="text-luxury-gold" size={28} />
                  </div>
                  <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-white">Add New Product</h2>
+                    <h2 className="text-3xl font-bold tracking-tight text-white uppercase italic">Add Masterpiece</h2>
                     <p className="text-gray-500 text-sm uppercase tracking-widest mt-1 font-bold">Premium Inventory Management</p>
                  </div>
               </div>
@@ -247,11 +256,11 @@ const AdminDashboard = () => {
                 <div className="space-y-8">
                   <div className="space-y-3">
                     <label className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-widest">
-                       <Upload size={16} className="text-luxury-gold" /> Product Photography
+                       <ImageIcon size={16} className="text-luxury-gold" /> Collection Gallery (Up to 10)
                     </label>
                     <ImageUpload 
-                      value={formData.image} 
-                      onChange={(url) => setFormData({ ...formData, image: url })} 
+                      value={formData.images} 
+                      onChange={(urls) => setFormData({ ...formData, images: urls })} 
                     />
                   </div>
 
@@ -306,7 +315,7 @@ const AdminDashboard = () => {
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       className="glass-input w-full resize-none focus:border-luxury-gold/50 text-white leading-relaxed"
-                      placeholder="Crafted with precision, this item features..."
+                      placeholder="Describe the exclusivity of this product..."
                     />
                   </div>
 
@@ -320,7 +329,7 @@ const AdminDashboard = () => {
                     </button>
                     <button
                       type="submit"
-                      disabled={submitting || !formData.image || !formData.category}
+                      disabled={submitting || formData.images.length === 0 || !formData.category}
                       className="btn-primary flex-1 py-4 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm font-bold tracking-widest uppercase shadow-xl hover:shadow-white/10"
                     >
                       {submitting ? (

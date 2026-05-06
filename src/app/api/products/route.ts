@@ -28,7 +28,8 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const token = cookies().get("token")?.value;
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -38,10 +39,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Admin access required" }, { status: 403 });
     }
 
-    const { name, price, category, description, image } = await req.json();
+    const { name, price, category, description, images } = await req.json();
 
-    if (!name || !price || !category || !description || !image) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (!name || !price || !category || !description || !images || !Array.isArray(images) || images.length === 0) {
+      return NextResponse.json({ error: "Missing required fields or images" }, { status: 400 });
     }
 
     await connectDB();
@@ -50,11 +51,12 @@ export async function POST(req: Request) {
       price,
       category,
       description,
-      image,
+      images,
     });
 
     return NextResponse.json(product, { status: 201 });
   } catch (error) {
+    console.error("Product creation error:", error);
     return NextResponse.json({ error: "Failed to create product" }, { status: 500 });
   }
 }
