@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ShoppingCart, ArrowUpRight, Image as ImageIcon } from "lucide-react";
 
@@ -26,10 +27,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
       <Link href={`/product/${product._id}`}>
         <div className="relative aspect-square overflow-hidden bg-white/5">
           {product.images && product.images.length > 0 ? (
-            <img
+            <Image
               src={product.images[0]}
               alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : (
             <div className="w-full h-full flex flex-col items-center justify-center text-gray-600 gap-2">
@@ -64,11 +67,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
 
         <Link
-          href={`https://wa.me/919605773773?text=I want to order ${encodeURIComponent(product.name)}`}
-          target="_blank"
+          href={`/product/${product._id}`}
           className="mt-6 flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white hover:text-black transition-all duration-300 font-semibold text-sm"
         >
-          <ShoppingCart size={18} /> Order via WhatsApp
+          <ShoppingCart size={18} /> Book via WhatsApp
         </Link>
       </div>
     </motion.div>

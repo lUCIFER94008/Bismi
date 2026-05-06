@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import CategoryDropdown from "@/components/CategoryDropdown";
 import ImageUpload from "@/components/ImageUpload";
@@ -175,7 +176,13 @@ const AdminDashboard = () => {
                       <td className="p-6">
                         <div className="flex items-center gap-4">
                           <div className="w-14 h-14 rounded-xl overflow-hidden bg-white/5 border border-white/10 p-1 group-hover:border-luxury-gold/50 transition-colors relative">
-                            <img src={product.images?.[0] || "/placeholder.png"} alt="" className="w-full h-full object-contain" />
+                            <Image 
+                              src={product.images?.[0] || "/placeholder.png"} 
+                              alt={product.name} 
+                              fill 
+                              className="object-contain" 
+                              sizes="56px"
+                            />
                             {product.images?.length > 1 && (
                               <div className="absolute bottom-0 right-0 bg-luxury-gold text-black text-[8px] font-black px-1 rounded-tl-md">
                                 +{product.images.length - 1}

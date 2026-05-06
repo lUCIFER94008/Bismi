@@ -3,7 +3,8 @@ import Footer from "@/components/Footer";
 import connectDB from "@/lib/db";
 import Product from "@/models/Product";
 import ProductGallery from "@/components/ProductGallery";
-import { ShoppingCart, Share2, ShieldCheck, Truck, RefreshCcw, ArrowLeft } from "lucide-react";
+import BookingAction from "@/components/BookingAction";
+import { ShieldCheck, Truck, RefreshCcw, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -15,8 +16,6 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
   if (!product) {
     notFound();
   }
-
-  const whatsappLink = `https://wa.me/919605773773?text=I want to order ${encodeURIComponent(product.name)}`;
 
   return (
     <main className="min-h-screen bg-background">
@@ -47,18 +46,12 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
               </p>
             </div>
 
-            <div className="space-y-4 mb-12">
-               <a
-                href={whatsappLink}
-                target="_blank"
-                className="btn-primary w-full flex items-center justify-center gap-3 py-5 text-lg shadow-[0_0_50px_rgba(212,175,55,0.1)]"
-              >
-                <ShoppingCart size={24} /> Buy via WhatsApp
-              </a>
-              <button className="btn-glass w-full flex items-center justify-center gap-3 py-5 text-lg">
-                <Share2 size={24} /> Share Masterpiece
-              </button>
-            </div>
+            <BookingAction product={{
+              name: product.name,
+              price: product.price,
+              category: product.category,
+              images: product.images
+            }} />
 
             {/* Features Grid */}
             <div className="grid grid-cols-2 gap-6 pt-12 border-t border-white/10">

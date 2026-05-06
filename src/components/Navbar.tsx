@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { LogOut, Menu, X, ShoppingBag, User as UserIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -16,7 +17,7 @@ const Navbar = () => {
     // Check for user in localStorage or via API
     const checkAuth = async () => {
       try {
-        const res = await fetch("/api/auth/me"); // I'll create this helper
+        const res = await fetch("/api/auth/me"); 
         if (res.ok) {
           const data = await res.json();
           setUser(data.user);
@@ -49,15 +50,17 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between glass-card px-6 py-3 border-white/20">
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 rounded-full overflow-hidden bg-white/10 border border-white/20 group-hover:scale-110 transition-transform duration-300">
-            <img 
+          <div className="w-10 h-10 rounded-full overflow-hidden bg-white/10 border border-white/20 group-hover:scale-110 transition-transform duration-300 relative">
+            <Image 
               src="https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png" 
               alt="Logo" 
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="40px"
             />
           </div>
-          <span className="font-bold text-xl tracking-tighter text-gradient hidden sm:block">
-            BISMI GIFT HOUSE
+          <span className="font-bold text-xl tracking-tighter text-gradient hidden sm:block uppercase italic">
+            NEW BISMI
           </span>
         </Link>
 
@@ -67,8 +70,8 @@ const Navbar = () => {
             <Link
               key={link.name}
               href={link.href}
-              className={`text-sm font-medium transition-colors hover:text-white ${
-                pathname === link.href ? "text-white" : "text-gray-400"
+              className={`text-sm font-bold uppercase tracking-widest transition-colors hover:text-white ${
+                pathname === link.href ? "text-white underline underline-offset-8 decoration-luxury-gold decoration-2" : "text-gray-400"
               }`}
             >
               {link.name}
@@ -93,7 +96,7 @@ const Navbar = () => {
               </button>
             </div>
           ) : (
-            <Link href="/login" className="btn-primary py-2 text-sm">
+            <Link href="/login" className="btn-primary py-2 text-sm px-6">
               Login
             </Link>
           )}

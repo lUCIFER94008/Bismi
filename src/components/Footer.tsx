@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Phone, MapPin, Globe, Mail } from "lucide-react";
 
 const Footer = () => {
@@ -8,11 +9,15 @@ const Footer = () => {
         {/* Brand */}
         <div className="space-y-6">
           <Link href="/" className="flex items-center gap-2">
-            <img 
-              src="https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png" 
-              alt="Logo" 
-              className="w-8 h-8 object-cover rounded-full"
-            />
+            <div className="w-8 h-8 relative rounded-full overflow-hidden">
+              <Image 
+                src="https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png" 
+                alt="Logo" 
+                fill
+                className="object-cover"
+                sizes="32px"
+              />
+            </div>
             <span className="font-bold text-lg tracking-tight">NEW BISMI</span>
           </Link>
           <p className="text-gray-400 text-sm leading-relaxed">

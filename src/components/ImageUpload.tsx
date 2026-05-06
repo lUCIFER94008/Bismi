@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import Image from "next/image";
 import { useDropzone } from "react-dropzone";
 import { motion, AnimatePresence } from "framer-motion";
 import { Upload, X, Loader2, Image as ImageIcon, CheckCircle2, AlertCircle, Plus } from "lucide-react";
@@ -41,9 +42,6 @@ const ImageUpload = ({ value, onChange }: ImageUploadProps) => {
         formData.append("file", file);
         formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
 
-        // Note: For real progress tracking with fetch, it's complex. 
-        // We'll simulate progress or just show a loader.
-        // For simplicity and matching user's requested logic:
         const response = await fetch(
           `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
           {
@@ -56,7 +54,6 @@ const ImageUpload = ({ value, onChange }: ImageUploadProps) => {
         
         const data = await response.json();
         
-        // Update specific file progress to 100
         setUploadingFiles(prev => prev.map(f => f.id === newUploadingFiles[index].id ? { ...f, progress: 100 } : f));
         
         return data.secure_url;
@@ -98,10 +95,12 @@ const ImageUpload = ({ value, onChange }: ImageUploadProps) => {
               exit={{ opacity: 0, scale: 0.8 }}
               className="relative group aspect-square rounded-2xl overflow-hidden border border-white/10 bg-white/5"
             >
-              <img
+              <Image
                 src={url}
                 alt={`Product ${index + 1}`}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 50vw, 20vw"
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <button
@@ -163,7 +162,7 @@ const ImageUpload = ({ value, onChange }: ImageUploadProps) => {
             }`}
           >
             <Upload className="text-gray-500 mb-4" size={48} />
-            <h3 className="text-xl font-bold mb-2">Upload Product Gallery</h3>
+            <h3 className="text-xl font-bold mb-2 text-white italic">Upload Product Gallery</h3>
             <p className="text-gray-500 text-sm">Drag & drop up to 10 images here</p>
             <p className="text-gray-600 text-[10px] mt-4 uppercase tracking-widest font-bold">JPG, PNG, WEBP • MAX 10MB EACH</p>
           </motion.div>
