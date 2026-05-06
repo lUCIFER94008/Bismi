@@ -52,30 +52,30 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
-      <div className="max-w-7xl mx-auto flex items-center justify-between glass-card px-6 py-3 border-white/20">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 rounded-full overflow-hidden bg-white/10 border border-white/20 group-hover:scale-110 transition-transform duration-300 relative">
+    <nav className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-4">
+      <div className="max-w-7xl mx-auto flex items-center justify-between glass-card px-4 sm:px-6 py-3 border-white/20">
+        <Link href="/" className="flex items-center gap-3 min-w-[200px] md:min-w-[320px] group">
+          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden bg-white/10 border border-white/20 group-hover:scale-110 transition-transform duration-300 relative shrink-0">
             <Image 
               src="https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png" 
               alt="Logo" 
               fill
               className="object-cover"
-              sizes="40px"
+              sizes="(max-width: 768px) 32px, 40px"
             />
           </div>
-          <span className="font-bold text-xl tracking-tighter text-gradient hidden sm:block uppercase italic">
-            NEW BISMI
-          </span>
+          <h1 className="text-white font-black tracking-wide uppercase text-xs sm:text-sm md:text-xl whitespace-nowrap bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent italic">
+            NEW BISMI GIFT HOUSE
+          </h1>
         </Link>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
-              className={`text-sm font-bold uppercase tracking-widest transition-colors hover:text-white ${
+              className={`text-xs font-bold uppercase tracking-widest transition-colors hover:text-white ${
                 pathname === link.href ? "text-white underline underline-offset-8 decoration-luxury-gold decoration-2" : "text-gray-400"
               }`}
             >
@@ -90,7 +90,7 @@ const Navbar = () => {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
                 <UserIcon size={16} className="text-gray-400" />
-                <span className="text-sm font-medium">{user.name}</span>
+                <span className="text-xs font-medium">{user.name}</span>
               </div>
               <button
                 onClick={handleLogout}
@@ -101,7 +101,7 @@ const Navbar = () => {
               </button>
             </div>
           ) : (
-            <Link href="/login" className="btn-primary py-2 text-sm px-6">
+            <Link href="/login" className="btn-primary py-2 text-xs px-6">
               Login
             </Link>
           )}
@@ -109,7 +109,7 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 text-white"
+          className="lg:hidden p-2 text-white"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -123,7 +123,7 @@ const Navbar = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="md:hidden absolute top-24 left-6 right-6 p-6 glass-card border-white/20 flex flex-col gap-4"
+            className="lg:hidden absolute top-24 left-6 right-6 p-6 glass-card border-white/20 flex flex-col gap-4"
           >
             {navLinks.map((link) => (
               <Link

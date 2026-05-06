@@ -18,10 +18,10 @@ const Footer = () => {
                 sizes="32px"
               />
             </div>
-            <span className="font-bold text-lg tracking-tight">NEW BISMI</span>
+            <span className="font-bold text-lg tracking-tight uppercase italic">NEW BISMI GIFT HOUSE</span>
           </Link>
           <p className="text-gray-400 text-sm leading-relaxed">
-            Premium gift shop offering a wide range of toys, diecast cars, office stationary, and luxury accessories. Since 2014, we bring joy to every occasion.
+            NEW BISMI GIFT HOUSE offers a curated collection of premium toys, diecast models, luxury accessories, and elegant stationery crafted for every special occasion.
           </p>
           <div className="flex gap-4">
             <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 hover:bg-white hover:text-black transition-all">
@@ -38,7 +38,7 @@ const Footer = () => {
 
         {/* Quick Links */}
         <div>
-          <h4 className="font-bold mb-6">Quick Links</h4>
+          <h4 className="font-bold mb-6 uppercase tracking-widest text-xs">Quick Links</h4>
           <ul className="space-y-4 text-gray-400 text-sm">
             <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
             <li><Link href="/products" className="hover:text-white transition-colors">Products</Link></li>
@@ -48,7 +48,7 @@ const Footer = () => {
 
         {/* Categories */}
         <div>
-          <h4 className="font-bold mb-6">Categories</h4>
+          <h4 className="font-bold mb-6 uppercase tracking-widest text-xs">Categories</h4>
           <ul className="space-y-4 text-gray-400 text-sm">
             <li><Link href="/products?category=Toys" className="hover:text-white transition-colors">Toys & Games</Link></li>
             <li><Link href="/products?category=Watches" className="hover:text-white transition-colors">Luxury Watches</Link></li>
@@ -59,7 +59,7 @@ const Footer = () => {
 
         {/* Contact */}
         <div>
-          <h4 className="font-bold mb-6">Contact Us</h4>
+          <h4 className="font-bold mb-6 uppercase tracking-widest text-xs">Contact Us</h4>
           <ul className="space-y-4 text-gray-400 text-sm">
             <li className="flex gap-3">
               <MapPin size={18} className="text-white shrink-0" />
@@ -73,8 +73,20 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto pt-8 border-t border-white/5 text-center text-gray-500 text-xs">
+      <div className="max-w-7xl mx-auto border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-gray-500 text-[10px] uppercase font-bold tracking-[0.2em]">
         <p>© {new Date().getFullYear()} NEW BISMI GIFT HOUSE. All rights reserved.</p>
+        <p className="flex items-center gap-2">
+          Designed by{" "}
+          <a
+            href="https://www.pixelriftonline.online/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-luxury-gold hover:text-white transition-all duration-300 font-black relative group"
+          >
+            Pixelrift
+            <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-luxury-gold group-hover:w-full transition-all duration-300" />
+          </a>
+        </p>
       </div>
     </footer>
   );
