@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { UserPlus, Mail, Lock, User, ShieldCheck, Loader2, ArrowRight } from "lucide-react";
+import { UserPlus, Mail, Lock, User, Loader2, ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
 const RegisterPage = () => {
@@ -12,7 +12,6 @@ const RegisterPage = () => {
     name: "",
     email: "",
     password: "",
-    adminPasscode: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -66,13 +65,13 @@ const RegisterPage = () => {
              <div className="inline-flex p-3 rounded-2xl bg-white/5 border border-white/10 mb-4">
                 <UserPlus className="text-luxury-gold" size={32} />
              </div>
-             <h1 className="text-3xl font-bold tracking-tight mb-2">Create Account</h1>
-             <p className="text-gray-500">Join the exclusive world of Bismi</p>
+             <h1 className="text-3xl font-bold tracking-tight mb-2 uppercase italic">Create Account</h1>
+             <p className="text-gray-500 font-medium">Join the exclusive world of Bismi</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-gray-400 ml-1">Full Name</label>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-gray-400 ml-1 uppercase tracking-widest">Full Name</label>
               <div className="relative">
                 <input
                   name="name"
@@ -80,15 +79,15 @@ const RegisterPage = () => {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="glass-input w-full pl-12"
+                  className="glass-input w-full pl-12 font-medium"
                   placeholder="John Doe"
                 />
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-gray-400 ml-1">Email Address</label>
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-gray-400 ml-1 uppercase tracking-widest">Email Address</label>
               <div className="relative">
                 <input
                   name="email"
@@ -96,15 +95,15 @@ const RegisterPage = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="glass-input w-full pl-12"
+                  className="glass-input w-full pl-12 font-medium"
                   placeholder="name@example.com"
                 />
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-gray-400 ml-1">Password</label>
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-gray-400 ml-1 uppercase tracking-widest">Password</label>
               <div className="relative">
                 <input
                   name="password"
@@ -112,25 +111,10 @@ const RegisterPage = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="glass-input w-full pl-12"
+                  className="glass-input w-full pl-12 font-medium"
                   placeholder="••••••••"
                 />
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-gray-400 ml-1">Admin Secret (Optional)</label>
-              <div className="relative">
-                <input
-                  name="adminPasscode"
-                  type="password"
-                  value={formData.adminPasscode}
-                  onChange={handleChange}
-                  className="glass-input w-full pl-12 focus:border-luxury-gold/30"
-                  placeholder="For admin access"
-                />
-                <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
               </div>
             </div>
 
@@ -143,16 +127,16 @@ const RegisterPage = () => {
             <button
               disabled={loading}
               type="submit"
-              className="btn-primary w-full py-4 flex items-center justify-center gap-2 text-lg disabled:opacity-50 mt-4"
+              className="btn-primary w-full py-5 flex items-center justify-center gap-3 text-sm font-black uppercase tracking-[0.2em] disabled:opacity-50 mt-4 shadow-[0_20px_40px_rgba(255,255,255,0.05)]"
             >
-              {loading ? <Loader2 className="animate-spin" size={20} /> : "Register"}
+              {loading ? <Loader2 className="animate-spin" size={20} /> : "Register Now"}
               {!loading && <ArrowRight size={20} />}
             </button>
           </form>
 
-          <div className="mt-8 text-center text-sm text-gray-500">
+          <div className="mt-10 text-center text-xs text-gray-500 uppercase tracking-widest font-bold">
             Already have an account?{" "}
-            <Link href="/login" className="text-white font-semibold hover:underline">
+            <Link href="/login" className="text-white hover:text-luxury-gold transition-colors">
               Sign In
             </Link>
           </div>

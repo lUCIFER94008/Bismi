@@ -42,7 +42,7 @@ const Footer = () => {
           <ul className="space-y-4 text-gray-400 text-sm">
             <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
             <li><Link href="/products" className="hover:text-white transition-colors">Products</Link></li>
-            <li><Link href="/login" className="hover:text-white transition-colors">Admin Login</Link></li>
+            <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
           </ul>
         </div>
 
@@ -58,7 +58,7 @@ const Footer = () => {
         </div>
 
         {/* Contact */}
-        <div>
+        <div id="contact">
           <h4 className="font-bold mb-6 uppercase tracking-widest text-xs">Contact Us</h4>
           <ul className="space-y-4 text-gray-400 text-sm">
             <li className="flex gap-3">
