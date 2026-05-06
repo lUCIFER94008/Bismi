@@ -29,6 +29,7 @@ const LoginPage = () => {
       const data = await res.json();
 
       if (res.ok) {
+        localStorage.setItem("token", data.token);
         if (data.user.role === "admin") {
           router.push("/admin");
         } else {

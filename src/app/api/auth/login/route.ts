@@ -44,11 +44,12 @@ export async function POST(req: Request) {
       {
         message: "Logged in successfully",
         user: { name: user.name, email: user.email, role: user.role },
+        token, // Added for frontend localStorage as requested
       },
       { status: 200 }
     );
 
-    // Set cookie
+    // Set cookie (keeping for server-side auth support)
     response.cookies.set("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

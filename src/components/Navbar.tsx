@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
-import { LogOut, Menu, X, ShoppingBag, User as UserIcon } from "lucide-react";
+import { LogOut, Menu, X, User as UserIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
@@ -14,7 +14,6 @@ const Navbar = () => {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Check for user in localStorage or via API
     const checkAuth = async () => {
       try {
         const res = await fetch("/api/auth/me"); 
@@ -32,9 +31,15 @@ const Navbar = () => {
   }, [pathname]);
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    setUser(null);
-    router.push("/login");
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      localStorage.removeItem("token");
+      setUser(null);
+      router.push("/login");
+      router.refresh();
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   const navLinks = [

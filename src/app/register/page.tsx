@@ -37,7 +37,8 @@ const RegisterPage = () => {
       const data = await res.json();
 
       if (res.ok) {
-        router.push("/login");
+        localStorage.setItem("token", data.token);
+        router.push("/");
       } else {
         setError(data.error || "Registration failed");
       }

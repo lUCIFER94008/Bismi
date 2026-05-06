@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ShoppingCart, Share2 } from "lucide-react";
 import BookingModal from "./BookingModal";
+import AuthModal from "./AuthModal";
 
 interface BookingActionProps {
   product: {
@@ -15,12 +16,26 @@ interface BookingActionProps {
 
 const BookingAction = ({ product }: BookingActionProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  const isAuthenticated = () => {
+    if (typeof window === "undefined") return false;
+    return !!localStorage.getItem("token");
+  };
+
+  const handleBooking = () => {
+    if (!isAuthenticated()) {
+      setShowAuthModal(true);
+      return;
+    }
+    setIsModalOpen(true);
+  };
 
   return (
     <>
       <div className="space-y-4 mb-12">
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={handleBooking}
           className="w-full relative group flex items-center justify-center gap-3 py-5 text-lg font-black uppercase tracking-[0.2em] rounded-2xl bg-green-500 text-white shadow-[0_20px_40px_rgba(34,197,94,0.2)] hover:shadow-[0_25px_50px_rgba(34,197,94,0.3)] transition-all hover:-translate-y-1 overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
@@ -38,6 +53,11 @@ const BookingAction = ({ product }: BookingActionProps) => {
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
         product={product} 
+      />
+
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)} 
       />
     </>
   );
