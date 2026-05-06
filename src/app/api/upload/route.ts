@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    console.log("Upload API: Starting Cloudinary stream upload...");
+    console.log("Upload API: Starting Cloudinary stream upload for:", file.name);
 
     const result: any = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(

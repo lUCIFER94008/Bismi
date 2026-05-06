@@ -236,8 +236,8 @@ const AdminDashboard = () => {
                     <Plus className="text-luxury-gold" size={28} />
                  </div>
                  <div>
-                    <h2 className="text-3xl font-bold tracking-tight">Add New Product</h2>
-                    <p className="text-gray-500 text-sm uppercase tracking-widest mt-1">Premium Inventory Management</p>
+                    <h2 className="text-3xl font-bold tracking-tight text-white">Add New Product</h2>
+                    <p className="text-gray-500 text-sm uppercase tracking-widest mt-1 font-bold">Premium Inventory Management</p>
                  </div>
               </div>
 
@@ -246,8 +246,8 @@ const AdminDashboard = () => {
                 {/* Left Side: Upload & Category */}
                 <div className="space-y-8">
                   <div className="space-y-3">
-                    <label className="text-sm font-bold text-gray-400 flex items-center gap-2">
-                       <Upload size={16} className="text-luxury-gold" /> Product Image
+                    <label className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-widest">
+                       <Upload size={16} className="text-luxury-gold" /> Product Photography
                     </label>
                     <ImageUpload 
                       value={formData.image} 
@@ -256,8 +256,8 @@ const AdminDashboard = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <label className="text-sm font-bold text-gray-400 flex items-center gap-2">
-                       <LayoutDashboard size={16} className="text-luxury-gold" /> Category
+                    <label className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-widest">
+                       <LayoutDashboard size={16} className="text-luxury-gold" /> Collection Category
                     </label>
                     <CategoryDropdown 
                       value={formData.category} 
@@ -269,43 +269,43 @@ const AdminDashboard = () => {
                 {/* Right Side: Details */}
                 <div className="space-y-6">
                   <div className="space-y-3">
-                    <label className="text-sm font-bold text-gray-400">Product Title</label>
+                    <label className="text-sm font-bold text-gray-400 uppercase tracking-widest">Product Title</label>
                     <div className="relative group">
                         <input
                           type="text"
                           required
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50"
+                          className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50 text-white font-medium"
                           placeholder="e.g. Vintage Diecast Racing Car"
                         />
-                        <FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-white transition-colors" size={18} />
+                        <FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-luxury-gold transition-colors" size={18} />
                     </div>
                   </div>
 
                   <div className="space-y-3">
-                    <label className="text-sm font-bold text-gray-400">Retail Price (₹)</label>
+                    <label className="text-sm font-bold text-gray-400 uppercase tracking-widest">Retail Price (₹)</label>
                     <div className="relative group">
                         <input
                           type="number"
                           required
                           value={formData.price}
                           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                          className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50"
-                          placeholder="0.00"
+                          className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50 text-white font-bold text-lg"
+                          placeholder="0"
                         />
-                        <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-white transition-colors" size={18} />
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-luxury-gold font-bold text-xl transition-colors">₹</div>
                     </div>
                   </div>
 
                   <div className="space-y-3">
-                    <label className="text-sm font-bold text-gray-400">Detailed Description</label>
+                    <label className="text-sm font-bold text-gray-400 uppercase tracking-widest">Item Description</label>
                     <textarea
                       required
                       rows={5}
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      className="glass-input w-full resize-none focus:border-luxury-gold/50"
+                      className="glass-input w-full resize-none focus:border-luxury-gold/50 text-white leading-relaxed"
                       placeholder="Crafted with precision, this item features..."
                     />
                   </div>
