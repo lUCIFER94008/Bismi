@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
-import { Plus, Trash2, LayoutDashboard, Package, Upload, Loader2, X, DollarSign, Tag, FileText } from "lucide-react";
+import CategoryDropdown from "@/components/CategoryDropdown";
+import ImageUpload from "@/components/ImageUpload";
+import { Plus, Trash2, LayoutDashboard, Package, Loader2, X, DollarSign, FileText, Upload } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const AdminDashboard = () => {
@@ -10,21 +12,15 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [uploading, setUploading] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState({
     name: "",
     price: "",
-    category: "Toys",
+    category: "",
     description: "",
     image: "",
   });
-
-  const categories = [
-    "Gifts", "Toys", "Diecast", "Metal Cars", "Stationary", 
-    "Office", "Dolls", "Clocks", "Watches", "Sunglasses", "Remote Cars"
-  ];
 
   useEffect(() => {
     fetchProducts();
@@ -43,32 +39,17 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    const data = new FormData();
-    data.append("file", file);
-
-    try {
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: data,
-      });
-      const result = await res.json();
-      if (res.ok) {
-        setFormData({ ...formData, image: result.secure_url });
-      }
-    } catch (err) {
-      alert("Image upload failed");
-    } finally {
-      setUploading(false);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.image) {
+      alert("Please upload an image first");
+      return;
+    }
+    if (!formData.category) {
+      alert("Please select a category");
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -80,8 +61,11 @@ const AdminDashboard = () => {
 
       if (res.ok) {
         setIsModalOpen(false);
-        setFormData({ name: "", price: "", category: "Toys", description: "", image: "" });
+        setFormData({ name: "", price: "", category: "", description: "", image: "" });
         fetchProducts();
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to add product");
       }
     } catch (err) {
       alert("Failed to add product");
@@ -108,7 +92,11 @@ const AdminDashboard = () => {
       <Navbar />
 
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12 gap-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12 gap-6"
+        >
           <div>
             <div className="flex items-center gap-3 text-luxury-gold mb-2">
                <LayoutDashboard size={20} />
@@ -119,39 +107,48 @@ const AdminDashboard = () => {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="btn-primary flex items-center gap-2 px-8"
+            className="btn-primary flex items-center gap-2 px-8 py-4 shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] transition-all"
           >
             <Plus size={20} /> Add New Product
           </button>
-        </div>
+        </motion.div>
 
         {/* Stats Summary */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-           <div className="glass-card p-6 border-white/10">
-              <p className="text-gray-500 text-sm mb-1 uppercase tracking-wider">Total Items</p>
-              <h3 className="text-3xl font-bold">{products.length}</h3>
-           </div>
-           <div className="glass-card p-6 border-white/10">
-              <p className="text-gray-500 text-sm mb-1 uppercase tracking-wider">Active Categories</p>
-              <h3 className="text-3xl font-bold">{new Set(products.map((p: any) => p.category)).size}</h3>
-           </div>
-           <div className="glass-card p-6 border-white/10 bg-luxury-gold/5">
-              <p className="text-luxury-gold text-sm mb-1 uppercase tracking-wider">Premium Access</p>
-              <h3 className="text-3xl font-bold text-luxury-gold">Verified</h3>
-           </div>
+           {[
+             { label: "Total Items", value: products.length, icon: Package },
+             { label: "Active Categories", value: new Set(products.map((p: any) => p.category)).size, icon: LayoutDashboard },
+             { label: "Premium Access", value: "Verified", icon: DollarSign, color: "text-luxury-gold" }
+           ].map((stat, i) => (
+             <motion.div 
+               key={stat.label}
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: i * 0.1 }}
+               className="glass-card p-6 border-white/10 group hover:border-white/20 transition-all"
+             >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-gray-500 text-sm mb-1 uppercase tracking-wider">{stat.label}</p>
+                    <h3 className={`text-3xl font-bold ${stat.color || ""}`}>{stat.value}</h3>
+                  </div>
+                  <stat.icon className="text-gray-600 group-hover:text-luxury-gold transition-colors" size={24} />
+                </div>
+             </motion.div>
+           ))}
         </div>
 
         {/* Products Table */}
-        <div className="glass-card overflow-hidden border-white/10">
+        <div className="glass-card overflow-hidden border-white/10 shadow-2xl">
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
+            <table className="w-full text-left border-collapse">
               <thead className="bg-white/5 border-b border-white/10">
                 <tr>
-                  <th className="p-6 font-bold text-sm uppercase tracking-wider">Product</th>
-                  <th className="p-6 font-bold text-sm uppercase tracking-wider">Category</th>
-                  <th className="p-6 font-bold text-sm uppercase tracking-wider">Price</th>
-                  <th className="p-6 font-bold text-sm uppercase tracking-wider">Date Added</th>
-                  <th className="p-6 font-bold text-sm uppercase tracking-wider text-right">Actions</th>
+                  <th className="p-6 font-bold text-sm uppercase tracking-wider text-gray-400">Product</th>
+                  <th className="p-6 font-bold text-sm uppercase tracking-wider text-gray-400">Category</th>
+                  <th className="p-6 font-bold text-sm uppercase tracking-wider text-gray-400">Price</th>
+                  <th className="p-6 font-bold text-sm uppercase tracking-wider text-gray-400">Date Added</th>
+                  <th className="p-6 font-bold text-sm uppercase tracking-wider text-gray-400 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
@@ -159,43 +156,49 @@ const AdminDashboard = () => {
                   <tr>
                     <td colSpan={5} className="p-20 text-center">
                        <Loader2 className="animate-spin mx-auto text-luxury-gold mb-4" size={32} />
-                       <p className="text-gray-500">Loading inventory...</p>
+                       <p className="text-gray-500 font-medium">Curating your inventory...</p>
                     </td>
                   </tr>
                 ) : products.length > 0 ? (
-                  products.map((product: any) => (
-                    <tr key={product._id} className="hover:bg-white/[0.02] transition-colors group">
+                  products.map((product: any, idx: number) => (
+                    <motion.tr 
+                      key={product._id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className="hover:bg-white/[0.03] transition-colors group"
+                    >
                       <td className="p-6">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-white/5 border border-white/10">
-                            <img src={product.image} alt="" className="w-full h-full object-cover" />
+                          <div className="w-14 h-14 rounded-xl overflow-hidden bg-white/5 border border-white/10 p-1 group-hover:border-luxury-gold/50 transition-colors">
+                            <img src={product.image} alt="" className="w-full h-full object-contain" />
                           </div>
-                          <span className="font-bold group-hover:text-luxury-gold transition-colors">{product.name}</span>
+                          <span className="font-bold text-white group-hover:text-luxury-gold transition-colors">{product.name}</span>
                         </div>
                       </td>
                       <td className="p-6">
-                        <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium">
+                        <span className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-gray-400">
                           {product.category}
                         </span>
                       </td>
-                      <td className="p-6 font-bold">₹{product.price}</td>
+                      <td className="p-6 font-bold text-white">₹{product.price}</td>
                       <td className="p-6 text-gray-500 text-sm">
-                        {new Date(product.createdAt).toLocaleDateString()}
+                        {new Date(product.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}
                       </td>
                       <td className="p-6 text-right">
                         <button
                           onClick={() => handleDelete(product._id)}
-                          className="p-2.5 rounded-xl bg-red-400/10 text-red-400 hover:bg-red-400 hover:text-white transition-all border border-red-400/20"
+                          className="p-3 rounded-xl bg-red-500/5 text-red-500 hover:bg-red-500 hover:text-white transition-all border border-red-500/10 hover:border-red-500 group-hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"
                         >
                           <Trash2 size={18} />
                         </button>
                       </td>
-                    </tr>
+                    </motion.tr>
                   ))
                 ) : (
                   <tr>
                     <td colSpan={5} className="p-20 text-center text-gray-500 italic">
-                      Inventory is empty. Start adding products.
+                      Inventory is empty. Elevate your collection by adding products.
                     </td>
                   </tr>
                 )}
@@ -208,131 +211,131 @@ const AdminDashboard = () => {
       {/* Add Product Modal */}
       <AnimatePresence>
         {isModalOpen && (
-          <div className="fixed inset-0 z-[60] flex items-center justify-center p-6">
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 sm:p-12 overflow-y-auto">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsModalOpen(false)}
-              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+              className="fixed inset-0 bg-black/90 backdrop-blur-md"
             />
             <motion.div
               initial={{ opacity: 0, y: 100, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 100, scale: 0.95 }}
-              className="glass-card w-full max-w-2xl relative z-10 p-8 border-white/20 overflow-hidden"
+              className="glass-card w-full max-w-4xl relative z-10 p-8 md:p-12 border-white/20 shadow-[0_0_100px_rgba(212,175,55,0.1)]"
             >
-              <div className="absolute top-0 right-0 p-4">
-                 <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-                    <X size={20} />
+              <div className="absolute top-6 right-6">
+                 <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-white/10 rounded-full transition-all hover:rotate-90">
+                    <X size={24} />
                  </button>
               </div>
 
-              <div className="flex items-center gap-3 mb-8">
-                 <Package className="text-luxury-gold" size={24} />
-                 <h2 className="text-2xl font-bold">New Product</h2>
+              <div className="flex items-center gap-4 mb-12">
+                 <div className="p-3 rounded-2xl bg-luxury-gold/10 border border-luxury-gold/20">
+                    <Plus className="text-luxury-gold" size={28} />
+                 </div>
+                 <div>
+                    <h2 className="text-3xl font-bold tracking-tight">Add New Product</h2>
+                    <p className="text-gray-500 text-sm uppercase tracking-widest mt-1">Premium Inventory Management</p>
+                 </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4 col-span-full">
-                  <label className="text-sm font-medium text-gray-400">Product Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="glass-input w-full"
-                    placeholder="Enter product title"
-                  />
-                </div>
-
-                <div className="space-y-4">
-                  <label className="text-sm font-medium text-gray-400">Price (₹)</label>
-                  <div className="relative">
-                    <input
-                      type="number"
-                      required
-                      value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                      className="glass-input w-full pl-10"
-                      placeholder="0.00"
-                    />
-                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <label className="text-sm font-medium text-gray-400">Category</label>
-                  <div className="relative">
-                    <select
-                      value={formData.category}
-                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="glass-input w-full appearance-none pr-10"
-                    >
-                      {categories.map(c => <option key={c} value={c}>{c}</option>)}
-                    </select>
-                    <Tag className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={16} />
-                  </div>
-                </div>
-
-                <div className="space-y-4 col-span-full">
-                  <label className="text-sm font-medium text-gray-400">Description</label>
-                  <textarea
-                    required
-                    rows={3}
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="glass-input w-full resize-none"
-                    placeholder="Describe the features..."
-                  />
-                </div>
-
-                <div className="space-y-4 col-span-full">
-                  <label className="text-sm font-medium text-gray-400">Product Image</label>
-                  {formData.image ? (
-                    <div className="relative w-full h-48 rounded-xl overflow-hidden border border-white/20">
-                      <img src={formData.image} alt="Preview" className="w-full h-full object-contain bg-white/5" />
-                      <button 
-                        type="button" 
-                        onClick={() => setFormData({...formData, image: ""})}
-                        className="absolute top-2 right-2 p-1 bg-red-500 rounded-full"
-                      >
-                        <X size={14} />
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:bg-white/5 transition-colors group">
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        {uploading ? (
-                           <Loader2 className="animate-spin text-luxury-gold" size={32} />
-                        ) : (
-                          <>
-                            <Upload className="text-gray-500 group-hover:text-white mb-3" size={32} />
-                            <p className="text-sm text-gray-400">Click to upload image</p>
-                          </>
-                        )}
-                      </div>
-                      <input type="file" className="hidden" onChange={handleImageUpload} disabled={uploading} />
+              <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                
+                {/* Left Side: Upload & Category */}
+                <div className="space-y-8">
+                  <div className="space-y-3">
+                    <label className="text-sm font-bold text-gray-400 flex items-center gap-2">
+                       <Upload size={16} className="text-luxury-gold" /> Product Image
                     </label>
-                  )}
+                    <ImageUpload 
+                      value={formData.image} 
+                      onChange={(url) => setFormData({ ...formData, image: url })} 
+                    />
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-sm font-bold text-gray-400 flex items-center gap-2">
+                       <LayoutDashboard size={16} className="text-luxury-gold" /> Category
+                    </label>
+                    <CategoryDropdown 
+                      value={formData.category} 
+                      onChange={(val) => setFormData({ ...formData, category: val })} 
+                    />
+                  </div>
                 </div>
 
-                <div className="col-span-full flex gap-4 mt-4">
-                  <button
-                    type="button"
-                    onClick={() => setIsModalOpen(false)}
-                    className="btn-glass flex-1 py-4"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={submitting || !formData.image}
-                    className="btn-primary flex-1 py-4 disabled:opacity-50 flex items-center justify-center gap-2"
-                  >
-                    {submitting ? <Loader2 className="animate-spin" size={20} /> : "Publish Product"}
-                  </button>
+                {/* Right Side: Details */}
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <label className="text-sm font-bold text-gray-400">Product Title</label>
+                    <div className="relative group">
+                        <input
+                          type="text"
+                          required
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50"
+                          placeholder="e.g. Vintage Diecast Racing Car"
+                        />
+                        <FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-white transition-colors" size={18} />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-sm font-bold text-gray-400">Retail Price (₹)</label>
+                    <div className="relative group">
+                        <input
+                          type="number"
+                          required
+                          value={formData.price}
+                          onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                          className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50"
+                          placeholder="0.00"
+                        />
+                        <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-white transition-colors" size={18} />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-sm font-bold text-gray-400">Detailed Description</label>
+                    <textarea
+                      required
+                      rows={5}
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      className="glass-input w-full resize-none focus:border-luxury-gold/50"
+                      placeholder="Crafted with precision, this item features..."
+                    />
+                  </div>
+
+                  <div className="flex gap-4 pt-6">
+                    <button
+                      type="button"
+                      onClick={() => setIsModalOpen(false)}
+                      className="btn-glass flex-1 py-4 text-sm font-bold tracking-widest uppercase"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={submitting || !formData.image || !formData.category}
+                      className="btn-primary flex-1 py-4 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm font-bold tracking-widest uppercase shadow-xl hover:shadow-white/10"
+                    >
+                      {submitting ? (
+                        <>
+                          <Loader2 className="animate-spin" size={20} /> Publishing...
+                        </>
+                      ) : (
+                        <>
+                          Publish Product <Plus size={20} />
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
+
               </form>
             </motion.div>
           </div>
