@@ -10,12 +10,13 @@ if (!MONGODB_URI) {
  * Global is used here to maintain a cached connection across hot reloads
  * in development.
  */
-let globalWithMongoose = global as typeof globalThis & {
+const globalWithMongoose = global as typeof globalThis & {
   _mongooseConn?: {
     conn: typeof mongoose | null;
     promise: Promise<typeof mongoose> | null;
   };
 };
+
 
 let cached = globalWithMongoose._mongooseConn;
 
