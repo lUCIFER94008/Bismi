@@ -43,12 +43,13 @@ const ProductGallery = ({ images }: ProductGalleryProps) => {
           >
             <Image
               src={images[activeIndex]}
-              alt={`Product view ${activeIndex + 1}`}
+              alt={`Main product view - ${activeIndex + 1} of ${images.length}`}
               fill
               className="object-contain p-8 bg-white/5"
               priority
               sizes="(max-width: 768px) 100vw, 50vw"
             />
+
           </motion.div>
         </AnimatePresence>
 
@@ -89,7 +90,14 @@ const ProductGallery = ({ images }: ProductGalleryProps) => {
                   : "border-white/10 opacity-50 hover:opacity-100"
               }`}
             >
-              <Image src={img} alt="" fill className="object-cover" sizes="10vw" />
+              <Image 
+                src={img} 
+                alt={`Product thumbnail ${idx + 1}`} 
+                fill 
+                className="object-cover" 
+                sizes="(max-width: 768px) 20vw, 10vw" 
+              />
+
             </button>
           ))}
         </div>

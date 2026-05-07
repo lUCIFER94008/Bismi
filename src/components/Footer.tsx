@@ -12,11 +12,13 @@ const Footer = () => {
             <div className="w-8 h-8 relative rounded-full overflow-hidden">
               <Image 
                 src="https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png" 
-                alt="Logo" 
+                alt="NEW BISMI Logo" 
                 fill
+                priority
                 className="object-cover"
                 sizes="32px"
               />
+
             </div>
             <span className="font-bold text-lg tracking-tight uppercase italic">NEW BISMI GIFT HOUSE</span>
           </Link>

@@ -120,10 +120,11 @@ Thank you.
                 <div className="relative aspect-square w-full rounded-2xl overflow-hidden mb-6 border border-white/10 shadow-2xl">
                   <Image
                     src={product.images[0] || "/placeholder.png"}
-                    alt={product.name}
+                    alt={`Booking preview of ${product.name}`}
                     fill
                     className="object-cover"
                   />
+
                 </div>
                 <div className="text-center">
                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-luxury-gold mb-2 block">Premium Selection</span>

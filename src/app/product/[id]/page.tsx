@@ -20,7 +20,8 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
   let product;
   try {
     await connectDB();
-    product = await Product.findById(id).lean();
+    product = await Product.findById(id).lean() as any;
+
   } catch (error) {
     console.error("Database error fetching product:", error);
     throw new Error("Failed to load masterpiece details");

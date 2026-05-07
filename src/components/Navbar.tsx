@@ -58,11 +58,13 @@ const Navbar = () => {
           <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden bg-white/10 border border-white/20 group-hover:scale-110 transition-transform duration-300 relative shrink-0">
             <Image 
               src="https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png" 
-              alt="Logo" 
+              alt="NEW BISMI Logo" 
               fill
+              priority
               className="object-cover"
               sizes="(max-width: 768px) 32px, 40px"
             />
+
           </div>
           <h1 className="text-white font-black tracking-wide uppercase text-xs sm:text-sm md:text-xl whitespace-nowrap bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent italic">
             NEW BISMI GIFT HOUSE

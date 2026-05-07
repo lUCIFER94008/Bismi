@@ -224,11 +224,12 @@ const AdminDashboard = () => {
                           <div className="w-14 h-14 rounded-xl overflow-hidden bg-white/5 border border-white/10 p-1 group-hover:border-luxury-gold/50 transition-colors relative">
                             <Image 
                               src={product.images?.[0] || "/placeholder.png"} 
-                              alt={product.name} 
+                              alt={`Preview of ${product.name}`} 
                               fill 
                               className="object-cover" 
                               sizes="56px"
                             />
+
                             {product.images?.length > 1 && (
                               <div className="absolute bottom-0 right-0 bg-luxury-gold text-black text-[8px] font-black px-1 rounded-tl-md">
                                 +{product.images.length - 1}

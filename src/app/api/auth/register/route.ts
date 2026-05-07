@@ -40,12 +40,13 @@ export async function POST(req: Request) {
       role,
     });
 
-    const token = signToken({
+    const token = await signToken({
       userId: newUser._id,
       name: newUser.name,
       email: newUser.email,
       role: newUser.role,
     });
+
 
     const response = NextResponse.json(
       { message: "User registered successfully", user: { name, email, role }, token },
