@@ -1,31 +1,38 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, model, models } from "mongoose";
 
-const ProductSchema = new mongoose.Schema(
+const ProductSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "Product name is required"],
+      trim: true,
     },
     price: {
       type: Number,
-      required: true,
+      required: [true, "Price is required"],
     },
     category: {
       type: String,
-      required: true,
+      required: [true, "Category is required"],
     },
     description: {
       type: String,
-      required: true,
+      required: [true, "Description is required"],
     },
-    images: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
+    images: {
+      type: [String],
+      required: [true, "At least one image is required"],
+      validate: [(val: string[]) => val.length > 0, "At least one image is required"],
+    },
   },
-  { timestamps: true }
+  { 
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  }
 );
 
-export default mongoose.models.Product || mongoose.model("Product", ProductSchema);
+const Product = models.Product || model("Product", ProductSchema);
+
+export default Product;
+

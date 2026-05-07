@@ -1,19 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import CategoryDropdown from "@/components/CategoryDropdown";
 import ImageUpload from "@/components/ImageUpload";
-import { Plus, Trash2, LayoutDashboard, Package, Loader2, X, FileText, Upload, DollarSign, Image as ImageIcon } from "lucide-react";
+import { Plus, Trash2, LayoutDashboard, Package, Loader2, X, FileText, ShoppingBag, DollarSign, Image as ImageIcon, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 const AdminDashboard = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Form State
   const [formData, setFormData] = useState({
@@ -24,31 +26,30 @@ const AdminDashboard = () => {
     images: [] as string[],
   });
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/products");
+      const res = await fetch("/api/products", { cache: 'no-store' });
+      if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
       
       if (Array.isArray(data)) {
         setProducts(data);
       } else {
-        console.error("API did not return an array:", data);
         setProducts([]);
-        if (data.error) toast.error(data.error);
       }
     } catch (err) {
       console.error("Fetch error:", err);
-      toast.error("Failed to fetch products. Check console for details.");
+      toast.error("Failed to load inventory");
       setProducts([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,35 +71,44 @@ const AdminDashboard = () => {
         body: JSON.stringify(formData),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
-        toast.success("Product published successfully");
+        toast.success("Masterpiece published successfully");
         setIsModalOpen(false);
         setFormData({ name: "", price: "", category: "", description: "", images: [] });
         fetchProducts();
       } else {
-        const data = await res.json();
         toast.error(data.error || "Failed to add product");
       }
     } catch (err) {
-      toast.error("Failed to add product");
+      toast.error("An unexpected error occurred");
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this product?")) return;
+    if (!confirm("Are you sure you want to permanently remove this masterpiece?")) return;
 
+    const loadingToast = toast.loading("Removing item...");
     try {
       const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
       if (res.ok) {
-        toast.success("Product deleted");
-        setProducts(products.filter((p: any) => p._id !== id));
+        toast.success("Removed from collection", { id: loadingToast });
+        setProducts(prev => prev.filter((p: any) => p._id !== id));
+      } else {
+        toast.error("Failed to remove item", { id: loadingToast });
       }
     } catch (err) {
-      toast.error("Delete failed");
+      toast.error("Delete failed", { id: loadingToast });
     }
   };
+
+  const filteredProducts = products.filter(p => 
+    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    p.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <main className="min-h-screen bg-background pt-32 pb-20 px-6">
@@ -113,55 +123,67 @@ const AdminDashboard = () => {
           <div>
             <div className="flex items-center gap-3 text-luxury-gold mb-2">
                <LayoutDashboard size={20} />
-               <span className="text-sm font-bold uppercase tracking-widest">Admin Control</span>
+               <span className="text-sm font-bold uppercase tracking-widest">Premium Inventory</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white">Product Inventory</h1>
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white italic">Curated Collection</h1>
           </div>
 
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="btn-primary flex items-center gap-2 px-8 py-4 shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] transition-all"
-          >
-            <Plus size={20} /> Add New Product
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+            <div className="relative group">
+              <input 
+                type="text" 
+                placeholder="Search collection..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="glass-input pl-12 pr-6 py-4 w-full sm:w-64 text-sm focus:border-luxury-gold/50 transition-all"
+              />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-luxury-gold transition-colors" size={18} />
+            </div>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="btn-primary flex items-center justify-center gap-2 px-8 py-4 shadow-[0_0_30px_rgba(212,175,55,0.1)] hover:shadow-[0_0_40px_rgba(212,175,55,0.2)] transition-all whitespace-nowrap"
+            >
+              <Plus size={20} /> Add Masterpiece
+            </button>
+          </div>
         </motion.div>
 
         {/* Stats Summary */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
            {[
-             { label: "Total Items", value: products.length, icon: Package },
-             { label: "Active Categories", value: new Set(products.map((p: any) => p.category)).size, icon: LayoutDashboard },
-             { label: "Premium Access", value: "Verified", icon: DollarSign, color: "text-luxury-gold" }
+             { label: "Total Artifacts", value: products.length, icon: Package },
+             { label: "Unique Categories", value: new Set(products.map((p: any) => p.category)).size, icon: LayoutDashboard },
+             { label: "Inventory Value", value: `₹${products.reduce((acc, p) => acc + (Number(p.price) || 0), 0).toLocaleString()}`, icon: DollarSign, color: "text-luxury-gold" }
            ].map((stat, i) => (
              <motion.div 
                key={stat.label}
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ delay: i * 0.1 }}
-               className="glass-card p-6 border-white/10 group hover:border-white/20 transition-all"
+               className="glass-card p-6 border-white/10 group hover:border-luxury-gold/20 transition-all"
              >
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="text-gray-500 text-sm mb-1 uppercase tracking-wider">{stat.label}</p>
-                    <h3 className={`text-3xl font-bold ${stat.color || ""}`}>{stat.value}</h3>
+                    <p className="text-gray-500 text-[10px] mb-1 uppercase tracking-widest font-bold">{stat.label}</p>
+                    <h3 className={`text-2xl font-bold ${stat.color || "text-white"}`}>{stat.value}</h3>
                   </div>
-                  <stat.icon className="text-gray-600 group-hover:text-luxury-gold transition-colors" size={24} />
+                  <stat.icon className="text-gray-700 group-hover:text-luxury-gold transition-colors" size={24} />
                 </div>
              </motion.div>
            ))}
         </div>
 
         {/* Products Table */}
-        <div className="glass-card overflow-hidden border-white/10 shadow-2xl">
+        <div className="glass-card overflow-hidden border-white/10 shadow-2xl relative">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead className="bg-white/5 border-b border-white/10">
                 <tr>
-                  <th className="p-6 font-bold text-sm uppercase tracking-wider text-gray-400">Product</th>
-                  <th className="p-6 font-bold text-sm uppercase tracking-wider text-gray-400">Category</th>
-                  <th className="p-6 font-bold text-sm uppercase tracking-wider text-gray-400">Price</th>
-                  <th className="p-6 font-bold text-sm uppercase tracking-wider text-gray-400">Date Added</th>
-                  <th className="p-6 font-bold text-sm uppercase tracking-wider text-gray-400 text-right">Actions</th>
+                  <th className="p-6 font-bold text-[10px] uppercase tracking-[0.2em] text-gray-500">Masterpiece</th>
+                  <th className="p-6 font-bold text-[10px] uppercase tracking-[0.2em] text-gray-500">Category</th>
+                  <th className="p-6 font-bold text-[10px] uppercase tracking-[0.2em] text-gray-500">Valuation</th>
+                  <th className="p-6 font-bold text-[10px] uppercase tracking-[0.2em] text-gray-500">Acquisition Date</th>
+                  <th className="p-6 font-bold text-[10px] uppercase tracking-[0.2em] text-gray-500 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
@@ -171,17 +193,25 @@ const AdminDashboard = () => {
                       <td className="p-6">
                         <div className="flex items-center gap-4">
                           <div className="w-14 h-14 rounded-xl bg-white/5" />
-                          <div className="h-4 w-32 bg-white/5 rounded" />
+                          <div className="space-y-2">
+                            <div className="h-4 w-32 bg-white/5 rounded" />
+                            <div className="h-3 w-20 bg-white/5 rounded" />
+                          </div>
                         </div>
                       </td>
                       <td className="p-6"><div className="h-4 w-20 bg-white/5 rounded" /></td>
                       <td className="p-6"><div className="h-4 w-16 bg-white/5 rounded" /></td>
                       <td className="p-6"><div className="h-4 w-24 bg-white/5 rounded" /></td>
-                      <td className="p-6 text-right"><div className="h-10 w-10 bg-white/5 rounded-xl ml-auto" /></td>
+                      <td className="p-6 text-right">
+                        <div className="flex justify-end gap-2">
+                           <div className="h-10 w-10 bg-white/5 rounded-xl" />
+                           <div className="h-10 w-10 bg-white/5 rounded-xl" />
+                        </div>
+                      </td>
                     </tr>
                   ))
-                ) : products.length > 0 ? (
-                  products.map((product: any, idx: number) => (
+                ) : filteredProducts.length > 0 ? (
+                  filteredProducts.map((product: any, idx: number) => (
                     <motion.tr 
                       key={product._id}
                       initial={{ opacity: 0, x: -20 }}
@@ -196,7 +226,7 @@ const AdminDashboard = () => {
                               src={product.images?.[0] || "/placeholder.png"} 
                               alt={product.name} 
                               fill 
-                              className="object-contain" 
+                              className="object-cover" 
                               sizes="56px"
                             />
                             {product.images?.length > 1 && (
@@ -205,25 +235,26 @@ const AdminDashboard = () => {
                               </div>
                             )}
                           </div>
-                          <Link href={`/product/${product._id}`} className="font-bold text-white group-hover:text-luxury-gold transition-colors">
+                          <Link href={`/product/${product._id}`} className="font-bold text-white group-hover:text-luxury-gold transition-colors block">
                             {product.name}
+                            <span className="block text-[10px] text-gray-500 font-medium uppercase tracking-widest mt-0.5">ID: {product._id.slice(-6)}</span>
                           </Link>
                         </div>
                       </td>
                       <td className="p-6">
-                        <span className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-gray-400">
+                        <span className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-gray-400">
                           {product.category}
                         </span>
                       </td>
-                      <td className="p-6 font-bold text-white">₹{product.price}</td>
-                      <td className="p-6 text-gray-500 text-sm">
+                      <td className="p-6 font-bold text-white tracking-tight">₹{Number(product.price).toLocaleString()}</td>
+                      <td className="p-6 text-gray-500 text-[11px] font-bold uppercase tracking-widest">
                         {new Date(product.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}
                       </td>
                       <td className="p-6 text-right">
                         <div className="flex justify-end gap-2">
                            <Link
                               href={`/product/${product._id}`}
-                              className="p-3 rounded-xl bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white transition-all border border-white/10"
+                              className="p-3 rounded-xl bg-white/5 text-gray-500 hover:bg-white/10 hover:text-white transition-all border border-white/10"
                            >
                               <FileText size={18} />
                            </Link>
@@ -241,24 +272,23 @@ const AdminDashboard = () => {
                   <tr>
                     <td colSpan={5} className="p-32 text-center">
                        <div className="max-w-xs mx-auto">
-                          <div className="w-20 h-20 bg-luxury-gold/5 border border-luxury-gold/10 rounded-3xl flex items-center justify-center mx-auto mb-6 text-luxury-gold/20">
-                             <Package size={40} strokeWidth={1} />
+                          <div className="w-24 h-24 bg-luxury-gold/5 border border-luxury-gold/10 rounded-[2rem] flex items-center justify-center mx-auto mb-8 text-luxury-gold/20 animate-pulse">
+                             <Package size={48} strokeWidth={1} />
                           </div>
-                          <h3 className="text-xl font-bold text-white mb-2">Exquisite Inventory Empty</h3>
-                          <p className="text-gray-500 text-sm leading-relaxed uppercase tracking-widest font-bold text-[10px]">
-                            Begin your legacy by adding your first masterpiece to the collection.
+                          <h3 className="text-2xl font-bold text-white mb-3 italic">Vault is Empty</h3>
+                          <p className="text-gray-500 text-[10px] leading-relaxed uppercase tracking-[0.2em] font-black mb-10">
+                            Begin your legacy by curating your first exclusive masterpiece.
                           </p>
                           <button 
                             onClick={() => setIsModalOpen(true)}
-                            className="mt-8 text-luxury-gold text-xs font-black uppercase tracking-[0.2em] hover:tracking-[0.3em] transition-all flex items-center justify-center gap-2 mx-auto"
+                            className="btn-primary px-10 py-4 text-xs font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 mx-auto"
                           >
-                             <Plus size={14} /> Add First Item
+                             <Plus size={18} /> Add First Item
                           </button>
                        </div>
                     </td>
                   </tr>
                 )}
-              </tbody>
               </tbody>
             </table>
           </div>
@@ -268,43 +298,43 @@ const AdminDashboard = () => {
       {/* Add Product Modal */}
       <AnimatePresence>
         {isModalOpen && (
-          <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 sm:p-12 overflow-y-auto">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 sm:p-12 overflow-y-auto">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsModalOpen(false)}
-              className="fixed inset-0 bg-black/90 backdrop-blur-md"
+              className="fixed inset-0 bg-black/95 backdrop-blur-xl"
             />
             <motion.div
-              initial={{ opacity: 0, y: 100, scale: 0.95 }}
+              initial={{ opacity: 0, y: 50, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 100, scale: 0.95 }}
-              className="glass-card w-full max-w-5xl relative z-10 p-8 md:p-12 border-white/20 shadow-[0_0_100px_rgba(212,175,55,0.1)]"
+              exit={{ opacity: 0, y: 50, scale: 0.95 }}
+              className="glass-card w-full max-w-5xl relative z-10 p-8 md:p-12 border-white/10 shadow-[0_0_100px_rgba(212,175,55,0.15)]"
             >
-              <div className="absolute top-6 right-6">
-                 <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-white/10 rounded-full transition-all hover:rotate-90">
+              <div className="absolute top-8 right-8">
+                 <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-white/10 rounded-full transition-all hover:rotate-90 text-gray-500 hover:text-white">
                     <X size={24} />
                  </button>
               </div>
 
-              <div className="flex items-center gap-4 mb-12">
-                 <div className="p-3 rounded-2xl bg-luxury-gold/10 border border-luxury-gold/20">
-                    <Plus className="text-luxury-gold" size={28} />
+              <div className="flex items-center gap-6 mb-12">
+                 <div className="p-4 rounded-3xl bg-luxury-gold/10 border border-luxury-gold/20 shadow-[0_0_30px_rgba(212,175,55,0.1)]">
+                    <Plus className="text-luxury-gold" size={32} />
                  </div>
                  <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-white uppercase italic">Add Masterpiece</h2>
-                    <p className="text-gray-500 text-sm uppercase tracking-widest mt-1 font-bold">Premium Inventory Management</p>
+                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white uppercase italic">Add Masterpiece</h2>
+                    <p className="text-gray-500 text-[10px] uppercase tracking-[0.3em] mt-2 font-black">Elite Collection Management</p>
                  </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+              <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 
                 {/* Left Side: Upload & Category */}
-                <div className="space-y-8">
-                  <div className="space-y-3">
-                    <label className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-widest">
-                       <ImageIcon size={16} className="text-luxury-gold" /> Collection Gallery (Up to 10)
+                <div className="space-y-10">
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-black text-gray-500 flex items-center gap-2 uppercase tracking-[0.2em]">
+                       <ImageIcon size={16} className="text-luxury-gold" /> Visual Assets (Up to 10)
                     </label>
                     <ImageUpload 
                       value={formData.images} 
@@ -312,9 +342,9 @@ const AdminDashboard = () => {
                     />
                   </div>
 
-                  <div className="space-y-3">
-                    <label className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-widest">
-                       <LayoutDashboard size={16} className="text-luxury-gold" /> Collection Category
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-black text-gray-500 flex items-center gap-2 uppercase tracking-[0.2em]">
+                       <LayoutDashboard size={16} className="text-luxury-gold" /> Curated Category
                     </label>
                     <CategoryDropdown 
                       value={formData.category} 
@@ -324,69 +354,69 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Right Side: Details */}
-                <div className="space-y-6">
-                  <div className="space-y-3">
-                    <label className="text-sm font-bold text-gray-400 uppercase tracking-widest">Product Title</label>
+                <div className="space-y-8">
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Artifact Title</label>
                     <div className="relative group">
                         <input
                           type="text"
                           required
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50 text-white font-medium"
+                          className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50 text-white font-bold"
                           placeholder="e.g. Vintage Diecast Racing Car"
                         />
-                        <FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-luxury-gold transition-colors" size={18} />
+                        <FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-luxury-gold transition-colors" size={18} />
                     </div>
                   </div>
 
-                  <div className="space-y-3">
-                    <label className="text-sm font-bold text-gray-400 uppercase tracking-widest">Retail Price (₹)</label>
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Acquisition Value (₹)</label>
                     <div className="relative group">
                         <input
                           type="number"
                           required
                           value={formData.price}
                           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                          className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50 text-white font-bold text-lg"
+                          className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50 text-white font-black text-xl"
                           placeholder="0"
                         />
-                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-luxury-gold font-bold text-xl transition-colors">₹</div>
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-luxury-gold font-bold text-xl">₹</div>
                     </div>
                   </div>
 
-                  <div className="space-y-3">
-                    <label className="text-sm font-bold text-gray-400 uppercase tracking-widest">Item Description</label>
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Narrative & Description</label>
                     <textarea
                       required
                       rows={5}
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      className="glass-input w-full resize-none focus:border-luxury-gold/50 text-white leading-relaxed"
-                      placeholder="Describe the exclusivity of this product..."
+                      className="glass-input w-full resize-none focus:border-luxury-gold/50 text-white leading-relaxed font-medium"
+                      placeholder="Describe the exclusivity and history of this masterpiece..."
                     />
                   </div>
 
-                  <div className="flex gap-4 pt-6">
+                  <div className="flex gap-6 pt-6">
                     <button
                       type="button"
                       onClick={() => setIsModalOpen(false)}
-                      className="btn-glass flex-1 py-4 text-sm font-bold tracking-widest uppercase"
+                      className="btn-glass flex-1 py-5 text-[10px] font-black tracking-[0.3em] uppercase border-white/10 hover:border-white/20 transition-all"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={submitting || formData.images.length === 0 || !formData.category}
-                      className="btn-primary flex-1 py-4 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm font-bold tracking-widest uppercase shadow-xl hover:shadow-white/10"
+                      className="btn-primary flex-1 py-5 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3 text-[10px] font-black tracking-[0.3em] uppercase shadow-2xl"
                     >
                       {submitting ? (
                         <>
-                          <Loader2 className="animate-spin" size={20} /> Publishing...
+                          <Loader2 className="animate-spin" size={20} /> Processing...
                         </>
                       ) : (
                         <>
-                          Publish Product <Plus size={20} />
+                          Publish to Vault <Plus size={20} />
                         </>
                       )}
                     </button>
@@ -403,3 +433,4 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+

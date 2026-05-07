@@ -4,50 +4,30 @@ import connectDB from "@/lib/db";
 import Product from "@/models/Product";
 import ProductGallery from "@/components/ProductGallery";
 import BookingAction from "@/components/BookingAction";
-import { ShieldCheck, ArrowLeft, Star, Gem, Award, SearchX, ShoppingBag } from "lucide-react";
+import { ShieldCheck, ArrowLeft, Star, Gem, Award } from "lucide-react";
 import Link from "next/link";
 import mongoose from "mongoose";
+import { notFound } from "next/navigation";
 
 export default async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   
-  // Validate ID format
-  const isValidId = mongoose.Types.ObjectId.isValid(id);
+  // Validate ID format first
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    notFound();
+  }
   
-  let product = null;
-  if (isValidId) {
+  let product;
+  try {
     await connectDB();
-    product = await Product.findById(id);
+    product = await Product.findById(id).lean();
+  } catch (error) {
+    console.error("Database error fetching product:", error);
+    throw new Error("Failed to load masterpiece details");
   }
 
   if (!product) {
-    return (
-      <main className="min-h-screen bg-background flex flex-col">
-        <Navbar />
-        <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-           <div className="relative mb-8">
-              <div className="absolute inset-0 bg-luxury-gold/20 blur-[100px] rounded-full" />
-              <div className="relative glass-card p-10 border-luxury-gold/20">
-                <SearchX className="text-luxury-gold mx-auto mb-6" size={80} strokeWidth={1} />
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-4 italic">Masterpiece Not Found</h1>
-                <p className="text-gray-500 max-w-md mx-auto leading-relaxed uppercase tracking-widest text-xs font-bold">
-                  The exclusive item you are looking for has either been acquired or is currently unavailable in our curated collection.
-                </p>
-              </div>
-           </div>
-           
-           <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/products" className="btn-primary px-8 py-4 flex items-center gap-2 group">
-                 <ShoppingBag size={20} className="group-hover:rotate-12 transition-transform" /> Browse Collection
-              </Link>
-              <Link href="/" className="btn-glass px-8 py-4 flex items-center gap-2">
-                 <ArrowLeft size={20} /> Back to Home
-              </Link>
-           </div>
-        </div>
-        <Footer />
-      </main>
-    );
+    notFound();
   }
 
   return (
@@ -56,7 +36,8 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
 
       <div className="max-w-7xl mx-auto px-6 pt-32 pb-20">
         <Link href="/products" className="inline-flex items-center gap-2 text-gray-500 hover:text-white transition-colors mb-12 group">
-          <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" /> Back to Catalog
+          <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" /> 
+          <span className="uppercase tracking-[0.2em] text-[10px] font-bold">Back to Gallery</span>
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
@@ -69,9 +50,9 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
               <p className="text-luxury-gold font-bold uppercase tracking-[0.2em] text-sm mb-4">{product.category}</p>
               <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4 text-white italic">{product.name}</h1>
               <div className="flex items-center gap-4 text-3xl font-bold text-white mb-6">
-                <span className="text-luxury-gold">₹{product.price}</span>
+                <span className="text-luxury-gold">₹{product.price.toLocaleString()}</span>
                 <span className="text-xs font-black uppercase tracking-widest text-green-500 px-3 py-1 rounded-full border border-green-500/20 bg-green-500/5">
-                  Premium Selection
+                  Available Now
                 </span>
               </div>
               <p className="text-gray-400 leading-relaxed text-lg mb-8">
@@ -93,8 +74,8 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
                   <ShieldCheck className="text-yellow-400" size={24} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-white uppercase tracking-tighter mb-1">Premium Quality</h4>
-                  <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest leading-relaxed">Crafted with luxury materials and elite standards</p>
+                  <h4 className="font-bold text-sm text-white uppercase tracking-tighter mb-1 text-[12px]">Elite Quality</h4>
+                  <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest leading-relaxed">Exclusively sourced premium materials</p>
                 </div>
               </div>
 
@@ -103,8 +84,8 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
                   <Star className="text-purple-400" size={24} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-white uppercase tracking-tighter mb-1">Handmade Design</h4>
-                  <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest leading-relaxed">Unique artisanal touch in every single masterpiece</p>
+                  <h4 className="font-bold text-sm text-white uppercase tracking-tighter mb-1 text-[12px]">Artisanal Build</h4>
+                  <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest leading-relaxed">Unmatched craftsmanship in every detail</p>
                 </div>
               </div>
 
@@ -113,8 +94,8 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
                   <Gem className="text-blue-400" size={24} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-white uppercase tracking-tighter mb-1">Luxury Finish</h4>
-                  <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest leading-relaxed">Exquisite detailing for the most sophisticated taste</p>
+                  <h4 className="font-bold text-sm text-white uppercase tracking-tighter mb-1 text-[12px]">Luxury Standard</h4>
+                  <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest leading-relaxed">Defining the peak of sophistication</p>
                 </div>
               </div>
 
@@ -123,8 +104,8 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
                   <Award className="text-luxury-gold" size={24} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-white uppercase tracking-tighter mb-1">Elite Collection</h4>
-                  <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest leading-relaxed">Part of our curated premium selection since 2014</p>
+                  <h4 className="font-bold text-sm text-white uppercase tracking-tighter mb-1 text-[12px]">Heritage Item</h4>
+                  <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest leading-relaxed">A timeless addition to your collection</p>
                 </div>
               </div>
             </div>
@@ -136,3 +117,4 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
     </main>
   );
 }
+
