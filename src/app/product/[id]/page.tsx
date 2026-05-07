@@ -4,26 +4,50 @@ import connectDB from "@/lib/db";
 import Product from "@/models/Product";
 import ProductGallery from "@/components/ProductGallery";
 import BookingAction from "@/components/BookingAction";
-import { ShieldCheck, ArrowLeft, Star, Gem, Award } from "lucide-react";
+import { ShieldCheck, ArrowLeft, Star, Gem, Award, SearchX, ShoppingBag } from "lucide-react";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
-import { cookies } from "next/headers";
+import mongoose from "mongoose";
 
 export default async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   
-  // Protect product details page
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-  if (!token) {
-    redirect("/login");
+  // Validate ID format
+  const isValidId = mongoose.Types.ObjectId.isValid(id);
+  
+  let product = null;
+  if (isValidId) {
+    await connectDB();
+    product = await Product.findById(id);
   }
 
-  await connectDB();
-  const product = await Product.findById(id);
-
   if (!product) {
-    notFound();
+    return (
+      <main className="min-h-screen bg-background flex flex-col">
+        <Navbar />
+        <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+           <div className="relative mb-8">
+              <div className="absolute inset-0 bg-luxury-gold/20 blur-[100px] rounded-full" />
+              <div className="relative glass-card p-10 border-luxury-gold/20">
+                <SearchX className="text-luxury-gold mx-auto mb-6" size={80} strokeWidth={1} />
+                <h1 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-4 italic">Masterpiece Not Found</h1>
+                <p className="text-gray-500 max-w-md mx-auto leading-relaxed uppercase tracking-widest text-xs font-bold">
+                  The exclusive item you are looking for has either been acquired or is currently unavailable in our curated collection.
+                </p>
+              </div>
+           </div>
+           
+           <div className="flex flex-col sm:flex-row gap-4">
+              <Link href="/products" className="btn-primary px-8 py-4 flex items-center gap-2 group">
+                 <ShoppingBag size={20} className="group-hover:rotate-12 transition-transform" /> Browse Collection
+              </Link>
+              <Link href="/" className="btn-glass px-8 py-4 flex items-center gap-2">
+                 <ArrowLeft size={20} /> Back to Home
+              </Link>
+           </div>
+        </div>
+        <Footer />
+      </main>
+    );
   }
 
   return (

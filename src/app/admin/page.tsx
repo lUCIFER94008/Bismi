@@ -33,10 +33,18 @@ const AdminDashboard = () => {
     try {
       const res = await fetch("/api/products");
       const data = await res.json();
-      setProducts(data);
+      
+      if (Array.isArray(data)) {
+        setProducts(data);
+      } else {
+        console.error("API did not return an array:", data);
+        setProducts([]);
+        if (data.error) toast.error(data.error);
+      }
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to fetch products");
+      console.error("Fetch error:", err);
+      toast.error("Failed to fetch products. Check console for details.");
+      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -158,12 +166,20 @@ const AdminDashboard = () => {
               </thead>
               <tbody className="divide-y divide-white/5">
                 {loading ? (
-                  <tr>
-                    <td colSpan={5} className="p-20 text-center">
-                       <Loader2 className="animate-spin mx-auto text-luxury-gold mb-4" size={32} />
-                       <p className="text-gray-500 font-medium">Curating your inventory...</p>
-                    </td>
-                  </tr>
+                  [...Array(5)].map((_, i) => (
+                    <tr key={i} className="animate-pulse">
+                      <td className="p-6">
+                        <div className="flex items-center gap-4">
+                          <div className="w-14 h-14 rounded-xl bg-white/5" />
+                          <div className="h-4 w-32 bg-white/5 rounded" />
+                        </div>
+                      </td>
+                      <td className="p-6"><div className="h-4 w-20 bg-white/5 rounded" /></td>
+                      <td className="p-6"><div className="h-4 w-16 bg-white/5 rounded" /></td>
+                      <td className="p-6"><div className="h-4 w-24 bg-white/5 rounded" /></td>
+                      <td className="p-6 text-right"><div className="h-10 w-10 bg-white/5 rounded-xl ml-auto" /></td>
+                    </tr>
+                  ))
                 ) : products.length > 0 ? (
                   products.map((product: any, idx: number) => (
                     <motion.tr 
@@ -189,7 +205,9 @@ const AdminDashboard = () => {
                               </div>
                             )}
                           </div>
-                          <span className="font-bold text-white group-hover:text-luxury-gold transition-colors">{product.name}</span>
+                          <Link href={`/product/${product._id}`} className="font-bold text-white group-hover:text-luxury-gold transition-colors">
+                            {product.name}
+                          </Link>
                         </div>
                       </td>
                       <td className="p-6">
@@ -202,22 +220,45 @@ const AdminDashboard = () => {
                         {new Date(product.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}
                       </td>
                       <td className="p-6 text-right">
-                        <button
-                          onClick={() => handleDelete(product._id)}
-                          className="p-3 rounded-xl bg-red-500/5 text-red-500 hover:bg-red-500 hover:text-white transition-all border border-red-500/10 hover:border-red-500 group-hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"
-                        >
-                          <Trash2 size={18} />
-                        </button>
+                        <div className="flex justify-end gap-2">
+                           <Link
+                              href={`/product/${product._id}`}
+                              className="p-3 rounded-xl bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white transition-all border border-white/10"
+                           >
+                              <FileText size={18} />
+                           </Link>
+                           <button
+                              onClick={() => handleDelete(product._id)}
+                              className="p-3 rounded-xl bg-red-500/5 text-red-500 hover:bg-red-500 hover:text-white transition-all border border-red-500/10 hover:border-red-500 group-hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"
+                           >
+                              <Trash2 size={18} />
+                           </button>
+                        </div>
                       </td>
                     </motion.tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={5} className="p-20 text-center text-gray-500 italic">
-                      Inventory is empty. Elevate your collection by adding products.
+                    <td colSpan={5} className="p-32 text-center">
+                       <div className="max-w-xs mx-auto">
+                          <div className="w-20 h-20 bg-luxury-gold/5 border border-luxury-gold/10 rounded-3xl flex items-center justify-center mx-auto mb-6 text-luxury-gold/20">
+                             <Package size={40} strokeWidth={1} />
+                          </div>
+                          <h3 className="text-xl font-bold text-white mb-2">Exquisite Inventory Empty</h3>
+                          <p className="text-gray-500 text-sm leading-relaxed uppercase tracking-widest font-bold text-[10px]">
+                            Begin your legacy by adding your first masterpiece to the collection.
+                          </p>
+                          <button 
+                            onClick={() => setIsModalOpen(true)}
+                            className="mt-8 text-luxury-gold text-xs font-black uppercase tracking-[0.2em] hover:tracking-[0.3em] transition-all flex items-center justify-center gap-2 mx-auto"
+                          >
+                             <Plus size={14} /> Add First Item
+                          </button>
+                       </div>
                     </td>
                   </tr>
                 )}
+              </tbody>
               </tbody>
             </table>
           </div>

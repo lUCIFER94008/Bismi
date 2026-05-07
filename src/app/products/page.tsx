@@ -104,9 +104,12 @@ const ProductsContent = () => {
 
       {/* Products Grid */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-40 gap-4">
-          <Loader2 className="animate-spin text-luxury-gold" size={40} />
-          <p className="text-gray-500 animate-pulse">Curating products for you...</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="glass-card aspect-square animate-pulse">
+               <div className="w-full h-full bg-white/5" />
+            </div>
+          ))}
         </div>
       ) : products.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">

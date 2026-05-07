@@ -35,10 +35,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   const handleAction = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!isAuthenticated()) {
-      setShowAuthModal(true);
-      return;
-    }
+    e.stopPropagation();
     router.push(`/product/${product._id}`);
   };
 
@@ -50,7 +47,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         viewport={{ once: true }}
         whileHover={{ y: -10 }}
         className="glass-card group overflow-hidden cursor-pointer"
-        onClick={handleAction}
+        onClick={() => router.push(`/product/${product._id}`)}
       >
         <div className="relative aspect-square overflow-hidden bg-white/5">
           {product.images && product.images.length > 0 ? (
@@ -70,17 +67,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
           
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
             <span className="text-white text-xs font-medium bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-1">
-              {isLogged ? "View Details" : "Login Required"} <ArrowUpRight size={14} />
+              View Masterpiece <ArrowUpRight size={14} />
             </span>
           </div>
-
-          {!isLogged && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-               <div className="p-3 rounded-full bg-luxury-gold/20 border border-luxury-gold/40 text-luxury-gold animate-bounce">
-                  <Lock size={20} />
-               </div>
-            </div>
-          )}
 
           {product.images?.length > 1 && (
             <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-lg border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -102,13 +91,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
           <button
             onClick={handleAction}
-            className={`mt-6 flex items-center justify-center gap-2 w-full py-3 rounded-xl transition-all duration-300 font-bold text-xs uppercase tracking-widest ${
-              isLogged 
-                ? "bg-white/5 border border-white/10 hover:bg-white hover:text-black" 
-                : "bg-luxury-gold/10 border border-luxury-gold/20 text-luxury-gold hover:bg-luxury-gold hover:text-black"
-            }`}
+            className="mt-6 flex items-center justify-center gap-2 w-full py-3 rounded-xl transition-all duration-300 font-bold text-xs uppercase tracking-widest bg-white/5 border border-white/10 hover:bg-white hover:text-black"
           >
-            <ShoppingCart size={18} /> {isLogged ? "Book via WhatsApp" : "Login to Order"}
+            <ShoppingCart size={18} /> View Details
           </button>
         </div>
       </motion.div>

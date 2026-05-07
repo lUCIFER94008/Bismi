@@ -19,9 +19,11 @@ export async function GET(req: Request) {
       query.name = { $regex: search, $options: "i" };
     }
 
+    // Sort by createdAt descending (newest first)
     const products = await Product.find(query).sort({ createdAt: -1 });
     return NextResponse.json(products, { status: 200 });
   } catch (error) {
+    console.error("Fetch products error:", error);
     return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });
   }
 }
