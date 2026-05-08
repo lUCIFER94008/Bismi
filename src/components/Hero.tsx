@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Sparkles } from "lucide-react";
 import Magnetic from "./Magnetic";
 import { useRef } from "react";
@@ -83,20 +84,48 @@ const Hero = () => {
         {/* Floating Decorative Cards */}
         <div className="mt-28 grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
           {[
-            { label: "Collection", title: "Diecast Models", h: "h-40" },
-            { label: "Bestseller", title: "Luxury Watches", h: "h-52", active: true },
-            { label: "New Arrival", title: "Remote Cars", h: "h-40" }
+            { label: "Collection", title: "Diecast Models", h: "h-48", img: "/hero/diecast.png" },
+            { label: "Bestseller", title: "Luxury Watches", h: "h-64", active: true, img: "/hero/watches.png" },
+            { label: "New Arrival", title: "Remote Cars", h: "h-48", img: "/hero/remote.png" }
           ].map((card, i) => (
             <motion.div
               key={card.title}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true }}
               transition={{ duration: 1, delay: 0.8 + i * 0.2 }}
-              className={`glass-card p-8 flex flex-col justify-end text-left border-white/10 group hover:border-luxury-gold/30 transition-colors ${card.h} ${card.active ? "bg-white/10 -mt-6" : ""}`}
+              whileHover={{ 
+                y: -15,
+                rotateX: 10,
+                rotateY: -5,
+                transition: { duration: 0.7, ease: "easeOut" }
+              }}
+              className={`relative overflow-hidden rounded-[2rem] glass-card flex flex-col justify-end text-left border-white/10 group cursor-pointer shadow-2xl ${card.h} ${card.active ? "md:-mt-8" : ""}`}
+              style={{ transformStyle: "preserve-3d" }}
             >
-              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-luxury-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <span className="text-[10px] text-gray-500 uppercase tracking-[0.3em] mb-2 font-bold">{card.label}</span>
-              <h3 className="font-bold text-xl group-hover:text-luxury-gold transition-colors italic uppercase">{card.title}</h3>
+              {/* Background Image with Hover Zoom */}
+              <div className="absolute inset-0 z-0">
+                <Image
+                  src={card.img}
+                  alt={card.title}
+                  fill
+                  className="object-cover transition-transform duration-[1000ms] ease-out group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
+              </div>
+
+              {/* Hover Glow Border */}
+              <div className="absolute inset-0 rounded-[2rem] border border-luxury-gold/0 group-hover:border-luxury-gold/50 transition-colors duration-700 z-20 pointer-events-none" />
+              <div className="absolute inset-0 rounded-[2rem] shadow-[0_0_40px_rgba(212,175,55,0)] group-hover:shadow-[0_0_40px_rgba(212,175,55,0.2)] transition-all duration-700 z-20 pointer-events-none" />
+
+              <div className="relative z-30 p-8 space-y-2 translate-z-10">
+                <span className="text-[10px] text-luxury-gold uppercase tracking-[0.4em] font-black drop-shadow-lg">
+                  {card.label}
+                </span>
+                <h3 className="font-black text-2xl text-white italic uppercase tracking-tighter drop-shadow-2xl group-hover:text-luxury-gold transition-colors duration-500">
+                  {card.title}
+                </h3>
+              </div>
             </motion.div>
           ))}
         </div>
