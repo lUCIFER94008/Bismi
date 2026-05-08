@@ -38,12 +38,12 @@ const ScrollReveal = ({
       opacity: 1,
       x: 0,
       y: 0,
-      transition: {
-        duration,
-        delay,
-        staggerChildren: stagger ? 0.1 : 0,
-        ease: [0.21, 0.47, 0.32, 0.98]
-      }
+        transition: {
+          duration,
+          delay,
+          staggerChildren: stagger ? 0.1 : 0,
+          ease: [0.21, 0.47, 0.32, 0.98] as any
+        }
     }
   };
 
@@ -53,7 +53,7 @@ const ScrollReveal = ({
       opacity: 1,
       x: 0,
       y: 0,
-      transition: { duration, ease: [0.21, 0.47, 0.32, 0.98] }
+      transition: { duration, ease: [0.21, 0.47, 0.32, 0.98] as any }
     }
   };
 

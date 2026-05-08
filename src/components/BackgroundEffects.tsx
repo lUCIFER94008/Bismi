@@ -1,8 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const BackgroundEffects = () => {
+  const [particles, setParticles] = useState<{ x: string; y: string; duration: number; delay: number }[]>([]);
+
+  useEffect(() => {
+    const newParticles = [...Array(20)].map(() => ({
+      x: Math.random() * 100 + "%",
+      y: Math.random() * 100 + "%",
+      duration: Math.random() * 10 + 10,
+      delay: Math.random() * 5,
+    }));
+    setParticles(newParticles);
+  }, []);
+
   return (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
       {/* Luxury Grid */}
@@ -50,22 +63,22 @@ const BackgroundEffects = () => {
       />
 
       {/* Subtle Particles */}
-      {[...Array(20)].map((_, i) => (
+      {particles.map((particle, i) => (
         <motion.div
           key={i}
           initial={{ 
             opacity: 0,
-            x: Math.random() * 100 + "%",
-            y: Math.random() * 100 + "%",
+            x: particle.x,
+            y: particle.y,
           }}
           animate={{
             opacity: [0, 0.5, 0],
             y: ["-10%", "110%"],
           }}
           transition={{
-            duration: Math.random() * 10 + 10,
+            duration: particle.duration,
             repeat: Infinity,
-            delay: Math.random() * 5,
+            delay: particle.delay,
             ease: "linear"
           }}
           className="absolute w-1 h-1 bg-luxury-gold/30 rounded-full"

@@ -4,14 +4,14 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import connectDB from "@/lib/db";
 import Product from "@/models/Product";
-import Category from "@/models/Category";
-import { ArrowRight, Star, Clock, Truck, ShieldCheck, MapPin, ChevronRight, ChevronLeft } from "lucide-react";
+import { ArrowRight, Star, Clock, Truck, ShieldCheck, MapPin } from "lucide-react";
 import Link from "next/link";
 import BackgroundEffects from "@/components/BackgroundEffects";
 import ScrollReveal from "@/components/ScrollReveal";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import CategoryCard from "@/components/CategoryCard";
 import Magnetic from "@/components/Magnetic";
+import ScrollProgress from "@/components/ScrollProgress";
 
 export default async function Home() {
   await connectDB();
@@ -40,10 +40,7 @@ export default async function Home() {
     <main className="min-h-screen bg-background relative overflow-x-hidden selection:bg-luxury-gold selection:text-black">
       <BackgroundEffects />
       
-      {/* Scroll Progress Indicator */}
-      <div className="fixed top-0 left-0 w-full h-[2px] z-[100] bg-white/5">
-         <div className="h-full bg-luxury-gold shadow-[0_0_10px_rgba(212,175,55,0.8)] w-0" id="scroll-progress" />
-      </div>
+      <ScrollProgress />
 
       <Navbar />
       <Hero />
@@ -228,16 +225,6 @@ export default async function Home() {
       </div>
 
       <Footer />
-      
-      {/* Scroll to Top Script */}
-      <script dangerouslySetInnerHTML={{ __html: `
-        window.addEventListener('scroll', () => {
-          const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-          const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-          const scrolled = (winScroll / height) * 100;
-          document.getElementById('scroll-progress').style.width = scrolled + '%';
-        });
-      `}} />
     </main>
   );
 }
