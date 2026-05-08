@@ -10,6 +10,8 @@ export const CATEGORIES = [
   { name: "Dolls", icon: "👗" },
   { name: "Balls", icon: "⚽" },
   { name: "Perfumes", icon: "🧴" },
+  { name: "Crockery", icon: "🍽️" },
+  { name: "Gifts", icon: "🎁" },
 ];
 
 export const getCategoryIcon = (name: string) => {

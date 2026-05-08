@@ -4,6 +4,7 @@ import Category from "@/models/Category";
 import Product from "@/models/Product";
 import { verifyToken } from "@/lib/auth";
 import { cookies } from "next/headers";
+import { CATEGORIES } from "@/constants/categories";
 
 export async function GET(req: Request) {
   try {
@@ -19,6 +20,7 @@ export async function GET(req: Request) {
     
     // Merge them to ensure all used categories are represented
     const allCategoryNames = new Set([
+      ...CATEGORIES.map(c => c.name),
       ...definedCategories.map((c: any) => c.name),
       ...productCategories
     ]);
@@ -26,11 +28,12 @@ export async function GET(req: Request) {
     const finalCategories = await Promise.all(
       Array.from(allCategoryNames).map(async (name: string) => {
         const defined = definedCategories.find((c: any) => c.name === name);
+        const staticCat = CATEGORIES.find(c => c.name === name);
         const count = withCounts ? await Product.countDocuments({ category: name }) : 0;
         return {
           _id: defined?._id || name,
           name,
-          icon: defined?.icon || "🎁",
+          icon: defined?.icon || staticCat?.icon || "🎁",
           count
         };
       })
