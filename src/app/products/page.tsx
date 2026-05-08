@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense, useCallback } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { Search, Filter, Loader2, X } from "lucide-react";
+import { Search, Loader2, X } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 

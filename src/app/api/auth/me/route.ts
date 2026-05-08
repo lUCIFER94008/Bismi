@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
 import { cookies } from "next/headers";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
@@ -16,7 +16,7 @@ export async function GET(req: Request) {
     }
 
     return NextResponse.json({ user: payload }, { status: 200 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

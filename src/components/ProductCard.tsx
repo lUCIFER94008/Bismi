@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useState } from "react";
+// import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ShoppingCart, ArrowUpRight, Image as ImageIcon, Lock } from "lucide-react";
+import { ShoppingCart, ArrowUpRight, Image as ImageIcon } from "lucide-react";
 import AuthModal from "./AuthModal";
 
 interface ProductCardProps {
@@ -21,17 +21,7 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [isLogged, setIsLogged] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLogged(!!token);
-  }, []);
-
-  const isAuthenticated = () => {
-    if (typeof window === "undefined") return false;
-    return !!localStorage.getItem("token");
-  };
+  // Removed unused isLogged and isAuthenticated logic
 
   const handleAction = (e: React.MouseEvent) => {
     e.preventDefault();

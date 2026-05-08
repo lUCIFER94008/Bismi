@@ -41,7 +41,7 @@ const RegisterPage = () => {
       } else {
         setError(data.error || "Registration failed");
       }
-    } catch (err) {
+    } catch {
       setError("Something went wrong");
     } finally {
       setLoading(false);

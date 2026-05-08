@@ -5,7 +5,7 @@ import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import CategoryDropdown from "@/components/CategoryDropdown";
 import ImageUpload from "@/components/ImageUpload";
-import { Plus, Trash2, LayoutDashboard, Package, Loader2, X, FileText, ShoppingBag, DollarSign, Image as ImageIcon, Search } from "lucide-react";
+import { Plus, Trash2, LayoutDashboard, Package, Loader2, X, FileText, DollarSign, Image as ImageIcon, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -33,8 +33,8 @@ const AdminDashboard = () => {
       const res = await fetch("/api/categories");
       const data = await res.json();
       if (Array.isArray(data)) setCategories(data);
-    } catch (err) {
-      console.error("Fetch categories error:", err);
+    } catch {
+      console.error("Fetch categories error");
     }
   }, []);
 
@@ -50,8 +50,8 @@ const AdminDashboard = () => {
       } else {
         setProducts([]);
       }
-    } catch (err) {
-      console.error("Fetch error:", err);
+    } catch {
+      console.error("Fetch error");
       toast.error("Failed to load inventory");
       setProducts([]);
     } finally {
@@ -75,7 +75,7 @@ const AdminDashboard = () => {
         const data = await res.json();
         toast.error(data.error || "Failed to remove category");
       }
-    } catch (err) {
+    } catch {
       toast.error("Error deleting category");
     }
   };
@@ -111,7 +111,7 @@ const AdminDashboard = () => {
       } else {
         toast.error(data.error || "Failed to add product");
       }
-    } catch (err) {
+    } catch {
       toast.error("An unexpected error occurred");
     } finally {
       setSubmitting(false);
@@ -130,7 +130,7 @@ const AdminDashboard = () => {
       } else {
         toast.error("Failed to remove item", { id: loadingToast });
       }
-    } catch (err) {
+    } catch {
       toast.error("Delete failed", { id: loadingToast });
     }
   };

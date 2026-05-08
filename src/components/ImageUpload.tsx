@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import Image from "next/image";
 import { useDropzone } from "react-dropzone";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, X, Loader2, Image as ImageIcon, CheckCircle2, AlertCircle, Plus } from "lucide-react";
+import { Upload, X, Loader2, Plus } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface ImageUploadProps {
@@ -14,7 +14,6 @@ interface ImageUploadProps {
 
 const ImageUpload = ({ value, onChange }: ImageUploadProps) => {
   const [loading, setLoading] = useState(false);
-  const [uploadingFiles, setUploadingFiles] = useState<{ id: string; progress: number }[]>([]);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (value.length + acceptedFiles.length > 10) {
@@ -30,14 +29,9 @@ const ImageUpload = ({ value, onChange }: ImageUploadProps) => {
     }
 
     setLoading(true);
-    const newUploadingFiles = acceptedFiles.map(file => ({
-      id: Math.random().toString(36).substr(2, 9),
-      progress: 0
-    }));
-    setUploadingFiles(prev => [...prev, ...newUploadingFiles]);
 
     try {
-      const uploadPromises = acceptedFiles.map(async (file, index) => {
+      const uploadPromises = acceptedFiles.map(async (file) => {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
@@ -54,8 +48,6 @@ const ImageUpload = ({ value, onChange }: ImageUploadProps) => {
         
         const data = await response.json();
         
-        setUploadingFiles(prev => prev.map(f => f.id === newUploadingFiles[index].id ? { ...f, progress: 100 } : f));
-        
         return data.secure_url;
       });
 
@@ -67,7 +59,6 @@ const ImageUpload = ({ value, onChange }: ImageUploadProps) => {
       toast.error("Some images failed to upload");
     } finally {
       setLoading(false);
-      setUploadingFiles([]);
     }
   }, [value, onChange]);
 

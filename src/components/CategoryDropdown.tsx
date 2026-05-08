@@ -25,8 +25,8 @@ const CategoryDropdown = ({ value, onChange }: CategoryDropdownProps) => {
       if (Array.isArray(data)) {
         setCategories(data);
       }
-    } catch (err) {
-      console.error("Error fetching categories:", err);
+    } catch {
+      console.error("Error fetching categories");
     } finally {
       setLoading(false);
     }
@@ -59,7 +59,7 @@ const CategoryDropdown = ({ value, onChange }: CategoryDropdownProps) => {
       } else {
         toast.error(data.error || "Failed to add category");
       }
-    } catch (err) {
+    } catch {
       toast.error("An unexpected error occurred");
     } finally {
       setAdding(false);

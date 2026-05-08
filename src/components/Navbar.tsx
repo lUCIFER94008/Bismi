@@ -23,7 +23,7 @@ const Navbar = () => {
         } else {
           setUser(null);
         }
-      } catch (error) {
+      } catch {
         setUser(null);
       }
     };

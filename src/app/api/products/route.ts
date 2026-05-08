@@ -11,7 +11,7 @@ export async function GET(req: Request) {
     const category = searchParams.get("category");
     const search = searchParams.get("search");
 
-    let query: any = {};
+    const query: any = {};
     if (category && category !== "All") {
       // Use a more flexible regex to allow matching "Diecast" with "Diecast Cars" etc.
       query.category = { $regex: new RegExp(category, "i") };

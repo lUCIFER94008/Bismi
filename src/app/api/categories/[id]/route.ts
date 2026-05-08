@@ -6,9 +6,10 @@ import { cookies } from "next/headers";
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
     
@@ -22,7 +23,7 @@ export async function DELETE(
     }
 
     await connectDB();
-    const category = await Category.findByIdAndDelete(params.id);
+    const category = await Category.findByIdAndDelete(id);
 
     if (!category) {
       return NextResponse.json({ error: "Category not found" }, { status: 404 });
