@@ -9,6 +9,7 @@ import { Plus, Trash2, LayoutDashboard, Package, Loader2, X, FileText, DollarSig
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { CATEGORIES } from "@/constants/categories";
 
 const AdminDashboard = () => {
   const [products, setProducts] = useState<any[]>([]);
@@ -17,7 +18,7 @@ const AdminDashboard = () => {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [categories, setCategories] = useState<any[]>([]);
+  const [dbCategories, setDbCategories] = useState<any[]>([]);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -32,7 +33,7 @@ const AdminDashboard = () => {
     try {
       const res = await fetch("/api/categories");
       const data = await res.json();
-      if (Array.isArray(data)) setCategories(data);
+      if (Array.isArray(data)) setDbCategories(data);
     } catch {
       console.error("Fetch categories error");
     }
@@ -141,7 +142,7 @@ const AdminDashboard = () => {
   );
 
   return (
-    <main className="min-h-screen bg-background pt-32 pb-20 px-6">
+    <main className="min-h-screen pt-32 pb-20 px-6">
       <Navbar />
 
       <div className="max-w-7xl mx-auto">
@@ -153,7 +154,7 @@ const AdminDashboard = () => {
           <div>
             <div className="flex items-center gap-3 text-luxury-gold mb-2">
                <LayoutDashboard size={20} />
-               <span className="text-sm font-bold uppercase tracking-widest">Premium Inventory</span>
+               <span className="text-sm font-bold uppercase tracking-widest">Exclusive Inventory</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white italic">Curated Collection</h1>
           </div>
@@ -188,7 +189,7 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
            {[
              { label: "Total Artifacts", value: products.length, icon: Package },
-             { label: "Unique Categories", value: categories.length, icon: LayoutDashboard },
+             { label: "Unique Categories", value: dbCategories.length, icon: LayoutDashboard },
              { label: "Inventory Value", value: `₹${products.reduce((acc, p) => acc + (Number(p.price) || 0), 0).toLocaleString()}`, icon: DollarSign, color: "text-luxury-gold" }
            ].map((stat, i) => (
              <motion.div 
@@ -226,24 +227,11 @@ const AdminDashboard = () => {
                 {loading ? (
                   [...Array(5)].map((_, i) => (
                     <tr key={i} className="animate-pulse">
-                      <td className="p-6">
-                        <div className="flex items-center gap-4">
-                          <div className="w-14 h-14 rounded-xl bg-white/5" />
-                          <div className="space-y-2">
-                            <div className="h-4 w-32 bg-white/5 rounded" />
-                            <div className="h-3 w-20 bg-white/5 rounded" />
-                          </div>
-                        </div>
-                      </td>
+                      <td className="p-6"><div className="flex items-center gap-4"><div className="w-14 h-14 rounded-xl bg-white/5" /><div className="space-y-2"><div className="h-4 w-32 bg-white/5 rounded" /><div className="h-3 w-20 bg-white/5 rounded" /></div></div></td>
                       <td className="p-6"><div className="h-4 w-20 bg-white/5 rounded" /></td>
                       <td className="p-6"><div className="h-4 w-16 bg-white/5 rounded" /></td>
                       <td className="p-6"><div className="h-4 w-24 bg-white/5 rounded" /></td>
-                      <td className="p-6 text-right">
-                        <div className="flex justify-end gap-2">
-                           <div className="h-10 w-10 bg-white/5 rounded-xl" />
-                           <div className="h-10 w-10 bg-white/5 rounded-xl" />
-                        </div>
-                      </td>
+                      <td className="p-6 text-right"><div className="flex justify-end gap-2"><div className="h-10 w-10 bg-white/5 rounded-xl" /><div className="h-10 w-10 bg-white/5 rounded-xl" /></div></td>
                     </tr>
                   ))
                 ) : filteredProducts.length > 0 ? (
@@ -258,19 +246,8 @@ const AdminDashboard = () => {
                       <td className="p-6">
                         <div className="flex items-center gap-4">
                           <div className="w-14 h-14 rounded-xl overflow-hidden bg-white/5 border border-white/10 p-1 group-hover:border-luxury-gold/50 transition-colors relative">
-                            <Image 
-                              src={product.images?.[0] || "/placeholder.png"} 
-                              alt={`Preview of ${product.name}`} 
-                              fill 
-                              className="object-cover" 
-                              sizes="56px"
-                            />
-
-                            {product.images?.length > 1 && (
-                              <div className="absolute bottom-0 right-0 bg-luxury-gold text-black text-[8px] font-black px-1 rounded-tl-md">
-                                +{product.images.length - 1}
-                              </div>
-                            )}
+                            <Image src={product.images?.[0] || "/placeholder.png"} alt={product.name} fill className="object-cover" sizes="56px" />
+                            {product.images?.length > 1 && <div className="absolute bottom-0 right-0 bg-luxury-gold text-black text-[8px] font-black px-1 rounded-tl-md">+{product.images.length - 1}</div>}
                           </div>
                           <Link href={`/product/${product._id}`} className="font-bold text-white group-hover:text-luxury-gold transition-colors block">
                             {product.name}
@@ -278,53 +255,19 @@ const AdminDashboard = () => {
                           </Link>
                         </div>
                       </td>
-                      <td className="p-6">
-                        <span className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-gray-400">
-                          {product.category}
-                        </span>
-                      </td>
+                      <td className="p-6"><span className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-gray-400">{product.category}</span></td>
                       <td className="p-6 font-bold text-white tracking-tight">₹{Number(product.price).toLocaleString()}</td>
-                      <td className="p-6 text-gray-500 text-[11px] font-bold uppercase tracking-widest">
-                        {new Date(product.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}
-                      </td>
+                      <td className="p-6 text-gray-500 text-[11px] font-bold uppercase tracking-widest">{new Date(product.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}</td>
                       <td className="p-6 text-right">
                         <div className="flex justify-end gap-2">
-                           <Link
-                              href={`/product/${product._id}`}
-                              className="p-3 rounded-xl bg-white/5 text-gray-500 hover:bg-white/10 hover:text-white transition-all border border-white/10"
-                           >
-                              <FileText size={18} />
-                           </Link>
-                           <button
-                              onClick={() => handleDelete(product._id)}
-                              className="p-3 rounded-xl bg-red-500/5 text-red-500 hover:bg-red-500 hover:text-white transition-all border border-red-500/10 hover:border-red-500 group-hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"
-                           >
-                              <Trash2 size={18} />
-                           </button>
+                           <Link href={`/product/${product._id}`} className="p-3 rounded-xl bg-white/5 text-gray-500 hover:bg-white/10 hover:text-white transition-all border border-white/10"><FileText size={18} /></Link>
+                           <button onClick={() => handleDelete(product._id)} className="p-3 rounded-xl bg-red-500/5 text-red-500 hover:bg-red-500 hover:text-white transition-all border border-red-500/10 hover:border-red-500 group-hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"><Trash2 size={18} /></button>
                         </div>
                       </td>
                     </motion.tr>
                   ))
                 ) : (
-                  <tr>
-                    <td colSpan={5} className="p-32 text-center">
-                       <div className="max-w-xs mx-auto">
-                          <div className="w-24 h-24 bg-luxury-gold/5 border border-luxury-gold/10 rounded-[2rem] flex items-center justify-center mx-auto mb-8 text-luxury-gold/20 animate-pulse">
-                             <Package size={48} strokeWidth={1} />
-                          </div>
-                          <h3 className="text-2xl font-bold text-white mb-3 italic">Vault is Empty</h3>
-                          <p className="text-gray-500 text-[10px] leading-relaxed uppercase tracking-[0.2em] font-black mb-10">
-                            Begin your legacy by curating your first exclusive masterpiece.
-                          </p>
-                          <button 
-                            onClick={() => setIsModalOpen(true)}
-                            className="btn-primary px-10 py-4 text-xs font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 mx-auto"
-                          >
-                             <Plus size={18} /> Add First Item
-                          </button>
-                       </div>
-                    </td>
-                  </tr>
+                  <tr><td colSpan={5} className="p-32 text-center"><div className="max-w-xs mx-auto"><div className="w-24 h-24 bg-luxury-gold/5 border border-luxury-gold/10 rounded-[2rem] flex items-center justify-center mx-auto mb-8 text-luxury-gold/20 animate-pulse"><Package size={48} strokeWidth={1} /></div><h3 className="text-2xl font-bold text-white mb-3 italic">Vault is Empty</h3><p className="text-gray-500 text-[10px] leading-relaxed uppercase tracking-[0.2em] font-black mb-10">Begin your legacy by curating your first exclusive masterpiece.</p><button onClick={() => setIsModalOpen(true)} className="btn-primary px-10 py-4 text-xs font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 mx-auto"><Plus size={18} /> Add First Item</button></div></td></tr>
                 )}
               </tbody>
             </table>
@@ -336,51 +279,16 @@ const AdminDashboard = () => {
       <AnimatePresence>
         {isCategoryModalOpen && (
           <div className="fixed inset-0 z-[110] flex items-center justify-center p-6">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsCategoryModalOpen(false)}
-              className="fixed inset-0 bg-black/90 backdrop-blur-md"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="glass-card w-full max-w-lg relative z-10 p-8 border-white/10 shadow-2xl"
-            >
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold italic">Manage Categories</h2>
-                <button onClick={() => setIsCategoryModalOpen(false)} className="text-gray-500 hover:text-white">
-                  <X size={20} />
-                </button>
-              </div>
-
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsCategoryModalOpen(false)} className="fixed inset-0 bg-black/90 backdrop-blur-md" />
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="glass-card w-full max-w-lg relative z-10 p-8 border-white/10 shadow-2xl">
+              <div className="flex justify-between items-center mb-8"><h2 className="text-2xl font-bold italic">Manage Categories</h2><button onClick={() => setIsCategoryModalOpen(false)} className="text-gray-500 hover:text-white"><X size={20} /></button></div>
               <div className="space-y-4 max-h-[60vh] overflow-y-auto no-scrollbar pr-2">
-                {categories.length > 0 ? (
-                  categories.map((cat) => (
-                    <div key={cat._id} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 group">
-                      <div className="flex items-center gap-3">
-                        <span className="text-xl">{cat.icon}</span>
-                        <span className="font-medium text-white">{cat.name}</span>
-                      </div>
-                      <button 
-                        onClick={() => handleDeleteCategory(cat._id)}
-                        className="p-2 rounded-lg bg-red-500/10 text-red-500 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-center text-gray-500 py-8">No categories defined yet.</p>
-                )}
-              </div>
-              
-              <div className="mt-8 pt-6 border-t border-white/10">
-                <p className="text-[10px] text-gray-500 uppercase tracking-widest text-center font-bold">
-                  Categories can be added while creating products.
-                </p>
+                {dbCategories.length > 0 ? dbCategories.map((cat) => (
+                  <div key={cat._id} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 group">
+                    <div className="flex items-center gap-3"><span className="text-xl">{cat.icon}</span><span className="font-medium text-white">{cat.name}</span></div>
+                    <button onClick={() => handleDeleteCategory(cat._id)} className="p-2 rounded-lg bg-red-500/10 text-red-500 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white"><Trash2 size={16} /></button>
+                  </div>
+                )) : <p className="text-center text-gray-500 py-8">No categories defined yet.</p>}
               </div>
             </motion.div>
           </div>
@@ -390,131 +298,22 @@ const AdminDashboard = () => {
       {/* Add Product Modal */}
       <AnimatePresence>
         {isModalOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 sm:p-12 overflow-y-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsModalOpen(false)}
-              className="fixed inset-0 bg-black/95 backdrop-blur-xl"
-            />
-            <motion.div
-              initial={{ opacity: 0, y: 50, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 50, scale: 0.95 }}
-              className="glass-card w-full max-w-5xl relative z-10 p-8 md:p-12 border-white/10 shadow-[0_0_100px_rgba(212,175,55,0.15)]"
-            >
-              <div className="absolute top-8 right-8">
-                 <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-white/10 rounded-full transition-all hover:rotate-90 text-gray-500 hover:text-white">
-                    <X size={24} />
-                 </button>
-              </div>
-
-              <div className="flex items-center gap-6 mb-12">
-                 <div className="p-4 rounded-3xl bg-luxury-gold/10 border border-luxury-gold/20 shadow-[0_0_30px_rgba(212,175,55,0.1)]">
-                    <Plus className="text-luxury-gold" size={32} />
-                 </div>
-                 <div>
-                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white uppercase italic">Add Masterpiece</h2>
-                    <p className="text-gray-500 text-[10px] uppercase tracking-[0.3em] mt-2 font-black">Elite Collection Management</p>
-                 </div>
-              </div>
-
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 sm:p-12 overflow-y-auto no-scrollbar">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="fixed inset-0 bg-black/95 backdrop-blur-xl" />
+            <motion.div initial={{ opacity: 0, y: 50, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 50, scale: 0.95 }} className="glass-card w-full max-w-5xl relative z-10 p-8 md:p-12 border-white/10 shadow-[0_0_100px_rgba(212,175,55,0.15)]">
+              <div className="absolute top-8 right-8"><button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-white/10 rounded-full transition-all hover:rotate-90 text-gray-500 hover:text-white"><X size={24} /></button></div>
+              <div className="flex items-center gap-6 mb-12"><div className="p-4 rounded-3xl bg-luxury-gold/10 border border-luxury-gold/20 shadow-[0_0_30px_rgba(212,175,55,0.1)]"><Plus className="text-luxury-gold" size={32} /></div><div><h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white uppercase italic">Add Masterpiece</h2><p className="text-gray-500 text-[10px] uppercase tracking-[0.3em] mt-2 font-black">Elite Collection Management</p></div></div>
               <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                
-                {/* Left Side: Upload & Category */}
                 <div className="space-y-10">
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-black text-gray-500 flex items-center gap-2 uppercase tracking-[0.2em]">
-                       <ImageIcon size={16} className="text-luxury-gold" /> Visual Assets (Up to 10)
-                    </label>
-                    <ImageUpload 
-                      value={formData.images} 
-                      onChange={(urls) => setFormData({ ...formData, images: urls })} 
-                    />
-                  </div>
-
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-black text-gray-500 flex items-center gap-2 uppercase tracking-[0.2em]">
-                       <LayoutDashboard size={16} className="text-luxury-gold" /> Curated Category
-                    </label>
-                    <CategoryDropdown 
-                      value={formData.category} 
-                      onChange={(val) => setFormData({ ...formData, category: val })} 
-                    />
-                  </div>
+                  <div className="space-y-4"><label className="text-[10px] font-black text-gray-500 flex items-center gap-2 uppercase tracking-[0.2em]"><ImageIcon size={16} className="text-luxury-gold" /> Visual Assets (Up to 10)</label><ImageUpload value={formData.images} onChange={(urls) => setFormData({ ...formData, images: urls })} /></div>
+                  <div className="space-y-4"><label className="text-[10px] font-black text-gray-500 flex items-center gap-2 uppercase tracking-[0.2em]"><LayoutDashboard size={16} className="text-luxury-gold" /> Curated Category</label><CategoryDropdown value={formData.category} onChange={(val) => setFormData({ ...formData, category: val })} /></div>
                 </div>
-
-                {/* Right Side: Details */}
                 <div className="space-y-8">
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Artifact Title</label>
-                    <div className="relative group">
-                        <input
-                          type="text"
-                          required
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50 text-white font-bold"
-                          placeholder="e.g. Vintage Diecast Racing Car"
-                        />
-                        <FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-luxury-gold transition-colors" size={18} />
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Acquisition Value (₹)</label>
-                    <div className="relative group">
-                        <input
-                          type="number"
-                          required
-                          value={formData.price}
-                          onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                          className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50 text-white font-black text-xl"
-                          placeholder="0"
-                        />
-                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-luxury-gold font-bold text-xl">₹</div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Narrative & Description</label>
-                    <textarea
-                      required
-                      rows={5}
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      className="glass-input w-full resize-none focus:border-luxury-gold/50 text-white leading-relaxed font-medium"
-                      placeholder="Describe the exclusivity and history of this masterpiece..."
-                    />
-                  </div>
-
-                  <div className="flex gap-6 pt-6">
-                    <button
-                      type="button"
-                      onClick={() => setIsModalOpen(false)}
-                      className="btn-glass flex-1 py-5 text-[10px] font-black tracking-[0.3em] uppercase border-white/10 hover:border-white/20 transition-all"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={submitting || formData.images.length === 0 || !formData.category}
-                      className="btn-primary flex-1 py-5 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3 text-[10px] font-black tracking-[0.3em] uppercase shadow-2xl"
-                    >
-                      {submitting ? (
-                        <>
-                          <Loader2 className="animate-spin" size={20} /> Processing...
-                        </>
-                      ) : (
-                        <>
-                          Publish to Vault <Plus size={20} />
-                        </>
-                      )}
-                    </button>
-                  </div>
+                  <div className="space-y-4"><label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Artifact Title</label><div className="relative group"><input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50 text-white font-bold" placeholder="e.g. Vintage Diecast Racing Car" /><FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-luxury-gold transition-colors" size={18} /></div></div>
+                  <div className="space-y-4"><label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Acquisition Value (₹)</label><div className="relative group"><input type="number" required value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50 text-white font-black text-xl" placeholder="0" /><div className="absolute left-4 top-1/2 -translate-y-1/2 text-luxury-gold font-bold text-xl">₹</div></div></div>
+                  <div className="space-y-4"><label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Narrative & Description</label><textarea required rows={5} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="glass-input w-full resize-none focus:border-luxury-gold/50 text-white leading-relaxed font-medium" placeholder="Describe the exclusivity and history of this masterpiece..." /></div>
+                  <div className="flex gap-6 pt-6"><button type="button" onClick={() => setIsModalOpen(false)} className="btn-glass flex-1 py-5 text-[10px] font-black tracking-[0.3em] uppercase">Cancel</button><button type="submit" disabled={submitting || formData.images.length === 0 || !formData.category} className="btn-primary flex-1 py-5 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3 text-[10px] font-black tracking-[0.3em] uppercase">{submitting ? <><Loader2 className="animate-spin" size={20} /> Processing...</> : <>Publish to Vault <Plus size={20} /></>}</button></div>
                 </div>
-
               </form>
             </motion.div>
           </div>

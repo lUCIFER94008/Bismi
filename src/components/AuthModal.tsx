@@ -66,7 +66,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
             </div>
 
             <p className="text-[8px] uppercase tracking-widest text-gray-600 mt-10 font-bold">
-              Premium Shopping Experience • Since 2014
+              Exclusive Shopping Experience • Since 2014
             </p>
           </motion.div>
         </div>

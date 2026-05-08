@@ -23,7 +23,7 @@ const Footer = () => {
             <span className="font-bold text-lg tracking-tight uppercase italic">NEW BISMI GIFT HOUSE</span>
           </Link>
           <p className="text-gray-400 text-sm leading-relaxed">
-            NEW BISMI GIFT HOUSE offers a curated collection of premium toys, diecast models, luxury accessories, and elegant stationery crafted for every special occasion.
+            NEW BISMI GIFT HOUSE offers a curated collection of luxury toys, diecast models, signature accessories, and elegant stationery crafted for every special occasion.
           </p>
           <div className="flex gap-4">
             <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 hover:bg-white hover:text-black transition-all">

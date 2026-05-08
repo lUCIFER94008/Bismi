@@ -127,7 +127,7 @@ Thank you.
 
                 </div>
                 <div className="text-center">
-                  <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-luxury-gold mb-2 block">Premium Selection</span>
+                  <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-luxury-gold mb-2 block">Exclusive Selection</span>
                   <h3 className="text-2xl font-bold text-white italic mb-2">{product.name}</h3>
                   <p className="text-3xl font-black text-white">₹{product.price}</p>
                 </div>
@@ -231,7 +231,7 @@ Thank you.
                 </form>
 
                 <p className="text-center text-[8px] uppercase tracking-widest text-gray-500 mt-8 font-bold">
-                  Premium Booking System • New Bismi Gift House
+                  Elite Booking System • New Bismi Gift House
                 </p>
               </div>
             </div>

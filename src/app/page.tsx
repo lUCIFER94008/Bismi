@@ -6,12 +6,12 @@ import connectDB from "@/lib/db";
 import Product from "@/models/Product";
 import { ArrowRight, Star, Clock, Truck, ShieldCheck, MapPin } from "lucide-react";
 import Link from "next/link";
-import BackgroundEffects from "@/components/BackgroundEffects";
 import ScrollReveal from "@/components/ScrollReveal";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import CategoryCard from "@/components/CategoryCard";
 import Magnetic from "@/components/Magnetic";
 import ScrollProgress from "@/components/ScrollProgress";
+import { CATEGORIES } from "@/constants/categories";
 
 export default async function Home() {
   await connectDB();
@@ -22,24 +22,8 @@ export default async function Home() {
     .limit(8)
     .lean();
 
-  const premiumCategories = [
-    { name: "Toys", icon: "🧸" },
-    { name: "Metal Cars", icon: "🏎️" },
-    { name: "Diecast Cars", icon: "🚗" },
-    { name: "Stationery", icon: "📝" },
-    { name: "RC Cars", icon: "🎮" },
-    { name: "Watches", icon: "⌚" },
-    { name: "Wall Clocks", icon: "⏰" },
-    { name: "Sunglasses", icon: "🕶️" },
-    { name: "Dolls", icon: "👗" },
-    { name: "Balls", icon: "⚽" },
-    { name: "Perfumes", icon: "🧴" },
-  ];
-
   return (
-    <main className="min-h-screen bg-background relative overflow-x-hidden selection:bg-luxury-gold selection:text-black">
-      <BackgroundEffects />
-      
+    <main className="min-h-screen relative overflow-x-hidden selection:bg-luxury-gold selection:text-black">
       <ScrollProgress />
 
       <Navbar />
@@ -50,7 +34,7 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
           {[
             { label: "Established", value: 2014, suffix: "", icon: Clock },
-            { label: "Premium Products", value: 1000, suffix: "+", icon: Star },
+            { label: "Exclusive Products", value: 1000, suffix: "+", icon: Star },
             { label: "Happy Collectors", value: 5000, suffix: "+", icon: ShieldCheck },
             { label: "Global Brands", value: 50, suffix: "+", icon: Truck },
           ].map((stat, i) => (
@@ -67,7 +51,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Featured Products - Premium Slider */}
+      {/* Featured Products - Luxury Slider */}
       <section className="py-32 px-6 bg-gradient-to-b from-transparent via-white/[0.02] to-transparent relative z-10">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal direction="left">
@@ -123,7 +107,7 @@ export default async function Home() {
           
           {/* Mobile Horizontal Swipe */}
           <div className="md:hidden flex gap-4 overflow-x-auto pb-8 hide-scrollbar snap-x-mandatory">
-            {premiumCategories.map((cat, i) => (
+            {CATEGORIES.map((cat, i) => (
               <div key={cat.name} className="min-w-[160px] snap-center">
                 <CategoryCard name={cat.name} icon={cat.icon} delay={i * 0.05} />
               </div>
@@ -132,10 +116,10 @@ export default async function Home() {
 
           {/* Desktop Grid */}
           <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-            {premiumCategories.map((cat, i) => (
+            {CATEGORIES.map((cat, i) => (
               <CategoryCard key={cat.name} name={cat.name} icon={cat.icon} delay={i * 0.05} />
             ))}
-            <ScrollReveal delay={premiumCategories.length * 0.05}>
+            <ScrollReveal delay={CATEGORIES.length * 0.05}>
               <Link 
                 href="/products"
                 className="glass-card p-8 h-full flex flex-col items-center justify-center text-center group border-luxury-gold/20 bg-luxury-gold/5 hover:bg-luxury-gold/10 transition-all duration-500"
@@ -148,7 +132,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
+      {/* Excellence Section */}
       <section className="py-32 px-6 relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-24">
           <div className="flex-1 space-y-12">

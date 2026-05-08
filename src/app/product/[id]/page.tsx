@@ -68,7 +68,7 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
               images: product.images
             }} />
 
-            {/* Premium Features Grid */}
+            {/* Exclusive Features Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-12 border-t border-white/10">
               <div className="flex gap-4 group">
                 <div className="p-3 rounded-2xl bg-yellow-400/10 border border-yellow-400/20 group-hover:bg-yellow-400/20 transition-all">
@@ -76,7 +76,7 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
                 </div>
                 <div>
                   <h4 className="font-bold text-sm text-white uppercase tracking-tighter mb-1 text-[12px]">Elite Quality</h4>
-                  <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest leading-relaxed">Exclusively sourced premium materials</p>
+                  <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest leading-relaxed">Exclusively sourced luxury materials</p>
                 </div>
               </div>
 

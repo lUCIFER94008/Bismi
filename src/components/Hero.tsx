@@ -60,7 +60,7 @@ const Hero = () => {
             transition={{ duration: 1, delay: 0.4 }}
             className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-medium"
           >
-            Experience a curated selection of premium diecast models, luxury watches, and boutique toys at Kochi&apos;s most prestigious gift house.
+            Experience a curated selection of exclusive diecast models, luxury watches, and boutique toys at Kochi&apos;s most prestigious gift house.
           </motion.p>
 
           <motion.div
