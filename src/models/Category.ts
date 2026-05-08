@@ -1,0 +1,21 @@
+import mongoose, { Schema, model, models } from "mongoose";
+
+const CategorySchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Category name is required"],
+      unique: true,
+      trim: true,
+    },
+    icon: {
+      type: String,
+      default: "🎁",
+    },
+  },
+  { timestamps: true }
+);
+
+const Category = models.Category || model("Category", CategorySchema);
+
+export default Category;

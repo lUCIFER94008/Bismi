@@ -4,21 +4,48 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import connectDB from "@/lib/db";
 import Product from "@/models/Product";
+import Category from "@/models/Category";
 import { ArrowRight, Star, Clock, Truck, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
 export default async function Home() {
   await connectDB();
-  const featuredProducts = await Product.find().limit(4).sort({ createdAt: -1 });
+  
+  // Fetch featured products (latest 4)
+  const featuredProducts = await Product.find()
+    .sort({ createdAt: -1 })
+    .limit(4)
+    .lean();
 
-  const categories = [
-    { name: "Toys", icon: "🧸" },
-    { name: "Diecast", icon: "🚗" },
-    { name: "Watches", icon: "⌚" },
-    { name: "Sunglasses", icon: "🕶️" },
-    { name: "Stationary", icon: "📝" },
-    { name: "Clocks", icon: "⏰" },
-  ];
+  // Fetch dynamic categories from Category model
+  let categories = await Category.find()
+    .sort({ name: 1 })
+    .limit(6)
+    .lean();
+
+  // Fallback: If no categories defined, get from products
+  if (categories.length === 0) {
+    const productCategories = await Product.distinct("category");
+    const iconMap: { [key: string]: string } = {
+      "Toys": "🧸",
+      "Diecast": "🚗",
+      "Cars": "🏎️",
+      "Watches": "⌚",
+      "Gifts": "🎁",
+      "Stationary": "📝",
+      "Office": "📁",
+      "Dolls": "👗",
+      "Clocks": "⏰",
+      "Sunglasses": "🕶️",
+      "Remote": "🎮",
+    };
+
+    categories = productCategories.slice(0, 6).map(name => ({
+      _id: name,
+      name,
+      icon: Object.entries(iconMap).find(([k]) => name.includes(k))?.[1] || "✨"
+    })) as any;
+  }
 
   return (
     <main className="min-h-screen bg-background">
@@ -48,22 +75,22 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-end mb-12">
             <div>
-              <h2 className="text-4xl font-bold mb-4 tracking-tight">Featured Arrivals</h2>
-              <p className="text-gray-500">Handpicked luxury items for your perfect gift.</p>
+              <h2 className="text-4xl font-bold mb-4 tracking-tight italic">Featured Arrivals</h2>
+              <p className="text-gray-500 text-xs uppercase tracking-[0.3em] font-black">Handpicked luxury items for your perfect gift.</p>
             </div>
-            <Link href="/products" className="hidden md:flex items-center gap-2 text-luxury-gold hover:underline">
+            <Link href="/products" className="hidden md:flex items-center gap-2 text-luxury-gold hover:underline font-bold text-xs uppercase tracking-widest">
               View All <ArrowRight size={18} />
             </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {featuredProducts.length > 0 ? (
-              featuredProducts.map((product) => (
-                <ProductCard key={product._id} product={JSON.parse(JSON.stringify(product))} />
+              featuredProducts.map((product: any) => (
+                <ProductCard key={product._id.toString()} product={JSON.parse(JSON.stringify(product))} />
               ))
             ) : (
-              <div className="col-span-full py-20 text-center glass-card">
-                <p className="text-gray-500 italic">No products added yet.</p>
+              <div className="col-span-full py-40 text-center glass-card border-white/10">
+                <p className="text-gray-500 italic text-xl">Our vault is being curated. Check back soon.</p>
               </div>
             )}
           </div>
@@ -71,33 +98,35 @@ export default async function Home() {
       </section>
 
       {/* Categories Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold mb-12 text-center tracking-tight">Browse by Category</h2>
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-6">
-            {categories.map((cat) => (
-              <Link 
-                key={cat.name} 
-                href={`/products?category=${cat.name}`}
-                className="glass-card p-8 text-center hover:bg-white hover:text-black transition-all duration-500 group"
-              >
-                <span className="text-4xl mb-4 block group-hover:scale-125 transition-transform duration-300">
-                  {cat.icon}
-                </span>
-                <span className="font-bold tracking-tight">{cat.name}</span>
-              </Link>
-            ))}
+      {categories.length > 0 && (
+        <section className="py-20 px-6">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl font-bold mb-12 text-center tracking-tight italic">Browse by Category</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+              {categories.map((cat: any) => (
+                <Link 
+                  key={cat._id.toString()} 
+                  href={`/products?category=${cat.name}`}
+                  className="glass-card p-8 text-center hover:bg-white hover:text-black transition-all duration-500 group border-white/10"
+                >
+                  <span className="text-4xl mb-4 block group-hover:scale-125 transition-transform duration-300">
+                    {cat.icon || "🎁"}
+                  </span>
+                  <span className="font-bold tracking-tight uppercase text-xs">{cat.name}</span>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* About Section */}
       <section className="py-20 px-6 bg-white/[0.02]">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16">
           <div className="flex-1">
-            <h2 className="text-4xl font-bold mb-8 tracking-tight">Why Choose Bismi Gift House?</h2>
+            <h2 className="text-4xl font-bold mb-8 tracking-tight italic">Why Choose Bismi Gift House?</h2>
             <div className="space-y-6">
-              <p className="text-gray-400 leading-relaxed">
+              <p className="text-gray-400 leading-relaxed font-medium">
                 Located in the heart of Kochi, we are more than just a gift shop. We are a destination for collectors and gift enthusiasts who value quality and exclusivity.
               </p>
               <ul className="space-y-4">
@@ -107,8 +136,8 @@ export default async function Home() {
                   "Luxury Watches & Accessories",
                   "Premium Office & School Stationary",
                 ].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-gray-300">
-                    <div className="w-1.5 h-1.5 rounded-full bg-luxury-gold" />
+                  <li key={item} className="flex items-center gap-3 text-gray-300 font-bold text-sm uppercase tracking-wide">
+                    <div className="w-1.5 h-1.5 rounded-full bg-luxury-gold shadow-[0_0_10px_rgba(212,175,55,0.5)]" />
                     {item}
                   </li>
                 ))}
@@ -116,7 +145,7 @@ export default async function Home() {
             </div>
           </div>
           <div className="flex-1 w-full">
-            <div className="glass-card overflow-hidden border-white/20">
+            <div className="glass-card overflow-hidden border-white/20 shadow-2xl">
               <iframe 
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.066697436798!2d76.29296412507814!3d10.005443440100269!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b080d12ae496bb1%3A0xc6b4dac9ca2e4cdf!2sNew%20Bismi%20Gift%20House!5e1!3m2!1sen!2sin!4v1777956639256!5m2!1sen!2sin"
                 width="100%"
@@ -133,3 +162,4 @@ export default async function Home() {
     </main>
   );
 }
+

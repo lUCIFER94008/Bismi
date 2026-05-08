@@ -13,7 +13,8 @@ export async function GET(req: Request) {
 
     let query: any = {};
     if (category && category !== "All") {
-      query.category = category;
+      // Use a more flexible regex to allow matching "Diecast" with "Diecast Cars" etc.
+      query.category = { $regex: new RegExp(category, "i") };
     }
     if (search) {
       query.name = { $regex: search, $options: "i" };

@@ -14,8 +14,10 @@ const AdminDashboard = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [categories, setCategories] = useState<any[]>([]);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -25,6 +27,16 @@ const AdminDashboard = () => {
     description: "",
     images: [] as string[],
   });
+
+  const fetchCategories = useCallback(async () => {
+    try {
+      const res = await fetch("/api/categories");
+      const data = await res.json();
+      if (Array.isArray(data)) setCategories(data);
+    } catch (err) {
+      console.error("Fetch categories error:", err);
+    }
+  }, []);
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -49,7 +61,24 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts]);
+    fetchCategories();
+  }, [fetchProducts, fetchCategories]);
+
+  const handleDeleteCategory = async (id: string) => {
+    if (!confirm("Are you sure? This will NOT delete products in this category, but the category will disappear from filters.")) return;
+    try {
+      const res = await fetch(`/api/categories/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        toast.success("Category removed");
+        fetchCategories();
+      } else {
+        const data = await res.json();
+        toast.error(data.error || "Failed to remove category");
+      }
+    } catch (err) {
+      toast.error("Error deleting category");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,6 +107,7 @@ const AdminDashboard = () => {
         setIsModalOpen(false);
         setFormData({ name: "", price: "", category: "", description: "", images: [] });
         fetchProducts();
+        fetchCategories(); // Refresh categories
       } else {
         toast.error(data.error || "Failed to add product");
       }
@@ -140,6 +170,12 @@ const AdminDashboard = () => {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-luxury-gold transition-colors" size={18} />
             </div>
             <button
+              onClick={() => setIsCategoryModalOpen(true)}
+              className="btn-glass flex items-center justify-center gap-2 px-6 py-4 border-white/10 hover:border-luxury-gold/30 transition-all text-xs font-bold uppercase tracking-widest"
+            >
+              <LayoutDashboard size={18} /> Categories
+            </button>
+            <button
               onClick={() => setIsModalOpen(true)}
               className="btn-primary flex items-center justify-center gap-2 px-8 py-4 shadow-[0_0_30px_rgba(212,175,55,0.1)] hover:shadow-[0_0_40px_rgba(212,175,55,0.2)] transition-all whitespace-nowrap"
             >
@@ -152,7 +188,7 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
            {[
              { label: "Total Artifacts", value: products.length, icon: Package },
-             { label: "Unique Categories", value: new Set(products.map((p: any) => p.category)).size, icon: LayoutDashboard },
+             { label: "Unique Categories", value: categories.length, icon: LayoutDashboard },
              { label: "Inventory Value", value: `₹${products.reduce((acc, p) => acc + (Number(p.price) || 0), 0).toLocaleString()}`, icon: DollarSign, color: "text-luxury-gold" }
            ].map((stat, i) => (
              <motion.div 
@@ -296,6 +332,61 @@ const AdminDashboard = () => {
         </div>
       </div>
 
+      {/* Categories Management Modal */}
+      <AnimatePresence>
+        {isCategoryModalOpen && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsCategoryModalOpen(false)}
+              className="fixed inset-0 bg-black/90 backdrop-blur-md"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="glass-card w-full max-w-lg relative z-10 p-8 border-white/10 shadow-2xl"
+            >
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-2xl font-bold italic">Manage Categories</h2>
+                <button onClick={() => setIsCategoryModalOpen(false)} className="text-gray-500 hover:text-white">
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="space-y-4 max-h-[60vh] overflow-y-auto no-scrollbar pr-2">
+                {categories.length > 0 ? (
+                  categories.map((cat) => (
+                    <div key={cat._id} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 group">
+                      <div className="flex items-center gap-3">
+                        <span className="text-xl">{cat.icon}</span>
+                        <span className="font-medium text-white">{cat.name}</span>
+                      </div>
+                      <button 
+                        onClick={() => handleDeleteCategory(cat._id)}
+                        className="p-2 rounded-lg bg-red-500/10 text-red-500 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center text-gray-500 py-8">No categories defined yet.</p>
+                )}
+              </div>
+              
+              <div className="mt-8 pt-6 border-t border-white/10">
+                <p className="text-[10px] text-gray-500 uppercase tracking-widest text-center font-bold">
+                  Categories can be added while creating products.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
       {/* Add Product Modal */}
       <AnimatePresence>
         {isModalOpen && (
@@ -434,4 +525,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-
