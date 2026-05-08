@@ -10,8 +10,17 @@ import { motion, AnimatePresence } from "framer-motion";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<{ name: string; role: string } | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -52,21 +61,20 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-4">
-      <div className="max-w-7xl mx-auto flex items-center justify-between glass-card px-4 sm:px-6 py-3 border-white/20">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-4 sm:px-6 ${isScrolled ? "py-2" : "py-6"}`}>
+      <div className={`max-w-7xl mx-auto flex items-center justify-between glass-card px-4 sm:px-6 border-white/20 transition-all duration-500 ${isScrolled ? "py-2 backdrop-blur-2xl bg-black/40 shadow-[0_10px_40px_rgba(0,0,0,0.4)]" : "py-4 backdrop-blur-md bg-transparent"}`}>
         <Link href="/" className="flex items-center gap-3 min-w-[200px] md:min-w-[320px] group">
-          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden bg-white/10 border border-white/20 group-hover:scale-110 transition-transform duration-300 relative shrink-0">
+          <div className={`rounded-full overflow-hidden bg-white/10 border border-white/20 group-hover:scale-110 transition-all duration-500 relative shrink-0 ${isScrolled ? "w-8 h-8 md:w-9 md:h-9" : "w-10 h-10 md:w-12 md:h-12"}`}>
             <Image 
               src="https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png" 
               alt="NEW BISMI Logo" 
               fill
               priority
               className="object-cover"
-              sizes="(max-width: 768px) 32px, 40px"
+              sizes="(max-width: 768px) 32px, 48px"
             />
-
           </div>
-          <h1 className="text-white font-black tracking-wide uppercase text-xs sm:text-sm md:text-xl whitespace-nowrap bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent italic">
+          <h1 className={`text-white font-black tracking-wide uppercase whitespace-nowrap bg-gradient-to-r from-white via-luxury-gold to-white bg-clip-text text-transparent italic transition-all duration-500 ${isScrolled ? "text-sm md:text-lg" : "text-base md:text-2xl"}`}>
             NEW BISMI GIFT HOUSE
           </h1>
         </Link>
@@ -77,11 +85,16 @@ const Navbar = () => {
             <Link
               key={link.name}
               href={link.href}
-              className={`text-xs font-bold uppercase tracking-widest transition-colors hover:text-white ${
-                pathname === link.href ? "text-white underline underline-offset-8 decoration-luxury-gold decoration-2" : "text-gray-400"
+              className={`text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300 hover:text-luxury-gold relative group ${
+                pathname === link.href ? "text-white" : "text-gray-400"
               }`}
             >
               {link.name}
+              <motion.div 
+                className={`absolute -bottom-2 left-0 right-0 h-[2px] bg-luxury-gold shadow-[0_0_10px_rgba(212,175,55,0.8)] ${pathname === link.href ? "opacity-100" : "opacity-0 group-hover:opacity-100 scale-x-0 group-hover:scale-x-100"}`}
+                initial={false}
+                transition={{ duration: 0.3 }}
+              />
             </Link>
           ))}
         </div>

@@ -35,10 +35,18 @@ const ProductCard = ({ product }: ProductCardProps) => {
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
-        whileHover={{ y: -10 }}
-        className="glass-card group overflow-hidden cursor-pointer"
+        whileHover={{ 
+          y: -10,
+          rotateX: 5,
+          rotateY: -5,
+          transition: { duration: 0.3 }
+        }}
+        className="glass-card group overflow-hidden cursor-pointer relative transition-all duration-500 hover:border-luxury-gold/40 hover:shadow-[0_20px_50px_rgba(212,175,55,0.15)]"
         onClick={() => router.push(`/product/${product._id}`)}
+        style={{ transformStyle: "preserve-3d" }}
       >
+        {/* Hover Glow Effect */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-luxury-gold/0 via-luxury-gold/0 to-luxury-gold/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
         <div className="relative aspect-square overflow-hidden bg-white/5">
           {product.images && product.images.length > 0 ? (
             <Image
