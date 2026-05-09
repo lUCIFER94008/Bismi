@@ -10,7 +10,32 @@ export const metadata: Metadata = {
   title: "NEW BISMI GIFT HOUSE | Luxury Gifts & Toys",
   description: "Explore the exclusive collection of luxury gifts, boutique toys, and curated diecast models at Kochi's most trusted gift house.",
   icons: {
-    icon: "https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png",
+    icon: [
+      {
+        url: "https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png",
+        href: "https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png",
+      },
+    ],
+    shortcut: "https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png",
+    apple: "https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png",
+  },
+  openGraph: {
+    title: "NEW BISMI GIFT HOUSE | Luxury Gifts & Toys",
+    description: "Explore the exclusive collection of luxury gifts, boutique toys, and curated diecast models at Kochi's most trusted gift house.",
+    images: [
+      {
+        url: "https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png",
+        width: 1200,
+        height: 630,
+        alt: "NEW BISMI GIFT HOUSE Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NEW BISMI GIFT HOUSE | Luxury Gifts & Toys",
+    description: "Explore the exclusive collection of luxury gifts, boutique toys, and curated diecast models at Kochi's most trusted gift house.",
+    images: ["https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png"],
   },
 };
 
