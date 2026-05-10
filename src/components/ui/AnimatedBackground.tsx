@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 const AnimatedBackground = () => {
@@ -61,7 +60,7 @@ const AnimatedBackground = () => {
       {/* Noise Texture */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://res.cloudinary.com/dpmpefw2p/image/upload/v1777956639256/noise_u8p6p6.png')] bg-repeat" />
       
-      <style jsx global>{`
+      <style>{`
         @keyframes orb-float-1 {
           0%, 100% { transform: translate(0, 0) scale(1); }
           33% { transform: translate(50px, -30px) scale(1.1); }

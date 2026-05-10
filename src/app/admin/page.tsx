@@ -9,7 +9,6 @@ import { Plus, Trash2, LayoutDashboard, Package, Loader2, X, FileText, DollarSig
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import { CATEGORIES } from "@/constants/categories";
 
 const AdminDashboard = () => {
   const [products, setProducts] = useState<any[]>([]);

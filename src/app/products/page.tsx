@@ -94,38 +94,41 @@ const ProductsContent = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-6 mb-24">
-      <div className="flex flex-col lg:flex-row gap-12 items-start justify-between mb-20">
-        <div className="max-w-xl">
+    <div className="max-w-7xl mx-auto px-6 mb-32">
+      <div className="flex flex-col lg:flex-row gap-16 items-start justify-between mb-24">
+        <div className="max-w-2xl space-y-6">
           <ScrollReveal>
-            <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6 italic uppercase">
-              The <span className="text-luxury-gold">Atelier</span>
+            <h1 className="text-6xl md:text-[5.5rem] font-bold tracking-tighter text-luxury-dark leading-[0.9]">
+              THE <span className="text-gold-gradient italic font-black">COLLECTION</span>
             </h1>
-            <p className="text-gray-500 text-xs uppercase tracking-[0.4em] font-bold">
-              Explore our exclusive world of luxury collectibles
-            </p>
+            <div className="flex items-center gap-6 mt-6">
+              <div className="w-16 h-[1.5px] bg-luxury-gold" />
+              <p className="text-luxury-dark/40 text-[11px] uppercase tracking-[0.5em] font-bold">
+                A Curated Selection of Precision Artifacts
+              </p>
+            </div>
           </ScrollReveal>
         </div>
 
-        <div className="w-full lg:w-auto flex flex-col gap-6">
+        <div className="w-full lg:w-auto pt-8">
           {/* Search */}
           <ScrollReveal direction="left">
             <form onSubmit={handleSearchSubmit} className="relative group">
               <input
                 type="text"
-                placeholder="Search collection..."
+                placeholder="Search the collection..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="glass-input w-full lg:w-96 pl-14 pr-12 py-5 text-sm focus:border-luxury-gold/50 transition-all font-medium"
+                className="glass-input w-full lg:w-[420px] pl-16 pr-14 py-6 text-[13px] font-bold tracking-wide shadow-sm"
               />
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-luxury-gold transition-colors" size={20} />
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-luxury-dark/40 group-focus-within:text-luxury-gold transition-colors duration-500" size={20} strokeWidth={2} />
               {searchTerm && (
                 <button 
                   type="button"
                   onClick={() => {setSearchTerm(""); updateFilters(selectedCategory, "")}}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"
+                  className="absolute right-6 top-1/2 -translate-y-1/2 text-luxury-dark/30 hover:text-luxury-gold transition-colors"
                 >
-                  <X size={18} />
+                  <X size={20} />
                 </button>
               )}
             </form>
@@ -134,24 +137,24 @@ const ProductsContent = () => {
       </div>
 
       {/* Category Filter Navigation */}
-      <div className="mb-20">
+      <div className="mb-24">
         <div className="flex flex-wrap gap-4 items-center">
           {categoryFilters.map((cat, i) => (
             <ScrollReveal key={cat.name} delay={i * 0.03} direction="up">
               <button
                 onClick={() => handleCategoryChange(cat.name)}
-                className={`group flex items-center gap-3 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all border ${
+                className={`group flex items-center gap-3.5 px-8 py-4 rounded-2xl text-[11px] font-bold uppercase tracking-[0.25em] transition-all border shadow-sm ${
                   selectedCategory === cat.name 
-                    ? "bg-white text-black border-white shadow-[0_10px_30px_rgba(255,255,255,0.2)] scale-105" 
-                    : "bg-white/5 text-gray-500 border-white/10 hover:border-luxury-gold/30 hover:text-white"
+                    ? "bg-luxury-dark text-white border-luxury-dark scale-105 shadow-xl" 
+                    : "bg-white/60 text-luxury-dark/60 border-luxury-platinum/50 hover:border-luxury-gold hover:text-luxury-dark hover:bg-white"
                 }`}
               >
-                <span className={`text-sm group-hover:scale-125 transition-transform duration-300 ${selectedCategory === cat.name ? "" : "grayscale"}`}>
+                <span className={`text-base transition-transform duration-500 group-hover:scale-125 ${selectedCategory === cat.name ? "" : "grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100"}`}>
                   {cat.icon}
                 </span>
                 {cat.name}
-                <span className={`text-[8px] opacity-40 font-bold ${selectedCategory === cat.name ? "text-black" : "text-gray-500"}`}>
-                  ({cat.count})
+                <span className={`text-[9px] font-bold ${selectedCategory === cat.name ? "text-luxury-gold" : "text-luxury-dark/30"}`}>
+                  {cat.count}
                 </span>
               </button>
             </ScrollReveal>
@@ -167,12 +170,10 @@ const ProductsContent = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10"
           >
             {[...Array(8)].map((_, i) => (
-              <div key={i} className="glass-card aspect-[4/5] animate-pulse border-white/5">
-                 <div className="w-full h-full bg-white/[0.02]" />
-              </div>
+              <div key={i} className="glass-card aspect-[4/5] animate-pulse border-luxury-platinum/30 bg-white/40 shadow-sm" />
             ))}
           </motion.div>
         ) : products.length > 0 ? (
@@ -184,17 +185,17 @@ const ProductsContent = () => {
               hidden: { opacity: 0 },
               visible: {
                 opacity: 1,
-                transition: { staggerChildren: 0.05 }
+                transition: { staggerChildren: 0.08 }
               }
             }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-16"
           >
             {products.map((product: any) => (
               <motion.div
                 key={product._id}
                 variants={{
-                  hidden: { opacity: 0, y: 20, scale: 0.95, filter: "blur(10px)" },
-                  visible: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
+                  hidden: { opacity: 0, y: 30, filter: "blur(10px)" },
+                  visible: { opacity: 1, y: 0, filter: "blur(0px)" }
                 }}
               >
                 <ProductCard product={product} />
@@ -204,23 +205,25 @@ const ProductsContent = () => {
         ) : (
           <motion.div 
             key="empty"
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="glass-card py-48 text-center border-white/10"
+            className="glass-card py-48 text-center border-luxury-platinum/50 bg-white/40 shadow-sm"
           >
-            <div className="max-w-sm mx-auto">
-              <div className="w-20 h-20 bg-luxury-gold/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-luxury-gold/20">
-                <Search size={32} className="text-luxury-gold" />
+            <div className="max-w-md mx-auto space-y-10">
+              <div className="w-24 h-24 bg-luxury-pearl rounded-full flex items-center justify-center mx-auto border border-luxury-platinum/50 shadow-inner">
+                <Search size={36} strokeWidth={1} className="text-luxury-gold" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 italic text-white uppercase tracking-tighter">Vault is currently empty</h3>
-              <p className="text-gray-500 text-[10px] uppercase tracking-[0.2em] font-bold leading-relaxed mb-10">
-                Our curators are constantly updating the collection. Try exploring other luxury categories.
-              </p>
+              <div className="space-y-4">
+                <h3 className="text-3xl font-bold text-luxury-dark uppercase tracking-tight">The Vault is Silent</h3>
+                <p className="text-luxury-dark/40 text-[11px] uppercase tracking-[0.4em] font-bold leading-relaxed max-w-sm mx-auto">
+                  Our curators are currently sourcing new masterpieces. Please explore other exquisite categories.
+                </p>
+              </div>
               <button 
                 onClick={() => {setSearchTerm(""); setSelectedCategory("All"); updateFilters("All", "")}}
-                className="btn-glass px-10 py-4 text-[10px] font-black uppercase tracking-[0.3em] border-luxury-gold/20 hover:border-luxury-gold/50"
+                className="btn-luxury px-12 py-5 text-[11px] font-bold uppercase tracking-[0.3em]"
               >
-                Reset All Filters
+                Reset Selection
               </button>
             </div>
           </motion.div>
@@ -232,9 +235,9 @@ const ProductsContent = () => {
 
 const ProductsPage = () => {
   return (
-    <main className="min-h-screen relative pt-32">
+    <main className="min-h-screen relative pt-40 bg-transparent">
       <Navbar />
-      <Suspense fallback={<div className="py-40 text-center"><Loader2 className="animate-spin mx-auto text-luxury-gold" size={40} /></div>}>
+      <Suspense fallback={<div className="py-60 text-center"><Loader2 className="animate-spin mx-auto text-luxury-gold" size={48} /></div>}>
         <ProductsContent />
       </Suspense>
       <Footer />

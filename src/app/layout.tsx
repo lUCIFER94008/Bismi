@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
-import AnimatedBackground from "@/components/ui/AnimatedBackground";
+import PremiumBackground from "@/components/ui/PremiumBackground";
+import CustomCursor from "@/components/ui/CustomCursor";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "NEW BISMI GIFT HOUSE | Luxury Gifts & Toys",
+  title: "NEW BISMI GIFT HOUSE | Premium Gifts & Toys",
   description: "Explore the exclusive collection of luxury gifts, boutique toys, and curated diecast models at Kochi's most trusted gift house.",
   icons: {
     icon: [
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
     apple: "https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png",
   },
   openGraph: {
-    title: "NEW BISMI GIFT HOUSE | Luxury Gifts & Toys",
+    title: "NEW BISMI GIFT HOUSE | Premium Gifts & Toys",
     description: "Explore the exclusive collection of luxury gifts, boutique toys, and curated diecast models at Kochi's most trusted gift house.",
     images: [
       {
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "NEW BISMI GIFT HOUSE | Luxury Gifts & Toys",
+    title: "NEW BISMI GIFT HOUSE | Premium Gifts & Toys",
     description: "Explore the exclusive collection of luxury gifts, boutique toys, and curated diecast models at Kochi's most trusted gift house.",
     images: ["https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png"],
   },
@@ -45,9 +46,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <AnimatedBackground />
+    <html lang="en" className="selection:bg-luxury-gold selection:text-white">
+      <body className={`${inter.className} bg-[#FDFBF7] text-luxury-dark min-h-screen antialiased`}>
+        <CustomCursor />
+        <PremiumBackground />
         {children}
         <Toaster 
           position="bottom-right"
