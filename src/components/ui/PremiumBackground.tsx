@@ -26,7 +26,7 @@ const PremiumBackground = () => {
   if (!mounted) return null;
 
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none bg-[#FFFBFA]">
+    <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none bg-[#FDFBF7]">
       {/* Intense Cinematic Golden Atmosphere */}
       <motion.div
         animate={{
@@ -42,7 +42,7 @@ const PremiumBackground = () => {
         }}
         className="absolute -top-[20%] -left-[10%] w-[120%] h-[120%] mix-blend-normal filter blur-[120px]"
         style={{
-          background: "radial-gradient(circle at center, rgba(255, 215, 0, 0.15) 0%, rgba(197, 160, 89, 0.1) 40%, transparent 80%)",
+          background: "radial-gradient(circle at center, rgba(197, 160, 89, 0.08) 0%, rgba(197, 160, 89, 0.03) 40%, transparent 80%)",
         }}
       />
       
@@ -77,7 +77,7 @@ const PremiumBackground = () => {
         }}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[90%] rounded-full opacity-[0.25] mix-blend-overlay filter blur-[180px]"
         style={{
-          background: "radial-gradient(circle, #FFD700 0%, transparent 80%)",
+          background: "radial-gradient(circle, rgba(197, 160, 89, 0.05) 0%, transparent 80%)",
         }}
       />
 

@@ -103,7 +103,7 @@ const ProductsContent = () => {
             </h1>
             <div className="flex items-center gap-6 mt-6">
               <div className="w-16 h-[1.5px] bg-luxury-gold" />
-              <p className="text-luxury-dark/40 text-[11px] uppercase tracking-[0.5em] font-bold">
+              <p className="text-[#444444] text-[11px] uppercase tracking-[0.5em] font-black">
                 A Curated Selection of Precision Artifacts
               </p>
             </div>
@@ -119,9 +119,9 @@ const ProductsContent = () => {
                 placeholder="Search the collection..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="glass-input w-full lg:w-[420px] pl-16 pr-14 py-6 text-[13px] font-bold tracking-wide shadow-sm"
+                className="glass-input w-full lg:w-[420px] pl-16 pr-14 py-6 text-[13px] font-black tracking-wide shadow-sm text-[#111111]"
               />
-              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-luxury-dark/40 group-focus-within:text-luxury-gold transition-colors duration-500" size={20} strokeWidth={2} />
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-[#444444] group-focus-within:text-luxury-gold transition-colors duration-500" size={20} strokeWidth={2} />
               {searchTerm && (
                 <button 
                   type="button"
@@ -146,14 +146,14 @@ const ProductsContent = () => {
                 className={`group flex items-center gap-3.5 px-8 py-4 rounded-2xl text-[11px] font-bold uppercase tracking-[0.25em] transition-all border shadow-sm ${
                   selectedCategory === cat.name 
                     ? "bg-luxury-dark text-white border-luxury-dark scale-105 shadow-xl" 
-                    : "bg-white/60 text-luxury-dark/60 border-luxury-platinum/50 hover:border-luxury-gold hover:text-luxury-dark hover:bg-white"
+                    : "bg-white/80 text-[#444444] border-luxury-platinum/50 hover:border-luxury-gold hover:text-luxury-dark hover:bg-white"
                 }`}
               >
                 <span className={`text-base transition-transform duration-500 group-hover:scale-125 ${selectedCategory === cat.name ? "" : "grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100"}`}>
                   {cat.icon}
                 </span>
                 {cat.name}
-                <span className={`text-[9px] font-bold ${selectedCategory === cat.name ? "text-luxury-gold" : "text-luxury-dark/30"}`}>
+                <span className={`text-[9px] font-black ${selectedCategory === cat.name ? "text-luxury-gold" : "text-[#444444]"}`}>
                   {cat.count}
                 </span>
               </button>
@@ -214,8 +214,8 @@ const ProductsContent = () => {
                 <Search size={36} strokeWidth={1} className="text-luxury-gold" />
               </div>
               <div className="space-y-4">
-                <h3 className="text-3xl font-bold text-luxury-dark uppercase tracking-tight">The Vault is Silent</h3>
-                <p className="text-luxury-dark/40 text-[11px] uppercase tracking-[0.4em] font-bold leading-relaxed max-w-sm mx-auto">
+                <h3 className="text-3xl font-bold text-[#111111] uppercase tracking-tight">The Vault is Silent</h3>
+                <p className="text-[#444444] text-[11px] uppercase tracking-[0.4em] font-black leading-relaxed max-w-sm mx-auto">
                   Our curators are currently sourcing new masterpieces. Please explore other exquisite categories.
                 </p>
               </div>

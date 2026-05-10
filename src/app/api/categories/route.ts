@@ -25,32 +25,33 @@ export async function GET(req: Request) {
       ...productCategories
     ]);
 
-    const finalCategories = await Promise.all(
-      Array.from(allCategoryNames).map(async (name: string) => {
-        const defined = definedCategories.find((c: any) => c.name === name);
-        const staticCat = CATEGORIES.find(c => c.name === name);
-        const count = withCounts ? await Product.countDocuments({ category: name }) : 0;
-        return {
-          _id: defined?._id || name,
-          name,
-          icon: defined?.icon || staticCat?.icon || "🎁",
-          count
-        };
-      })
-    );
-
-    // Sort by name
-    finalCategories.sort((a, b) => a.name.localeCompare(b.name));
+    const finalCategories = Array.from(allCategoryNames).map((name: string) => {
+      const defined = definedCategories.find((c: any) => c.name === name);
+      const staticCat = CATEGORIES.find(c => c.name === name);
+      return {
+        _id: defined?._id || name,
+        name,
+        icon: defined?.icon || staticCat?.icon || "🎁"
+      };
+    });
 
     if (withCounts) {
+      const categoriesWithCounts = await Promise.all(
+        finalCategories.map(async (cat) => ({
+          ...cat,
+          count: await Product.countDocuments({ category: cat.name })
+        }))
+      );
+      
       const totalCount = await Product.countDocuments({});
+      
       return NextResponse.json({ 
-        categories: finalCategories,
+        categories: categoriesWithCounts.sort((a, b) => a.name.localeCompare(b.name)),
         totalCount 
       }, { status: 200 });
     }
 
-    return NextResponse.json(finalCategories, { status: 200 });
+    return NextResponse.json(finalCategories.sort((a, b) => a.name.localeCompare(b.name)), { status: 200 });
   } catch (error) {
     console.error("Fetch categories error:", error);
     return NextResponse.json({ error: "Failed to fetch categories" }, { status: 500 });

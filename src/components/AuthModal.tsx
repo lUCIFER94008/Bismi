@@ -45,9 +45,9 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
             </div>
 
             <div className="space-y-4">
-              <h2 className="text-4xl font-bold text-luxury-dark tracking-tighter">PRIVATE <span className="text-luxury-gold italic">VAULT</span></h2>
-              <p className="text-luxury-dark/50 text-[13px] leading-relaxed font-medium">
-                Please authenticate to access the exclusive <span className="text-luxury-dark font-bold">NEW BISMI GIFT HOUSE</span> collection.
+              <h2 className="text-4xl font-bold text-[#111111] tracking-tighter">PRIVATE <span className="text-luxury-gold italic">VAULT</span></h2>
+              <p className="text-[#444444] text-[13px] leading-relaxed font-bold">
+                Please authenticate to access the exclusive <span className="text-luxury-dark font-black">NEW BISMI GIFT HOUSE</span> collection.
               </p>
             </div>
 

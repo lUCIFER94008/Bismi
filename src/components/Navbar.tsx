@@ -75,11 +75,11 @@ const Navbar = () => {
             />
           </div>
           <div className="flex flex-col">
-            <h1 className={`text-luxury-dark font-bold tracking-tight whitespace-nowrap transition-all duration-500 ${isScrolled ? "text-sm md:text-lg" : "text-base md:text-xl"}`}>
+            <h1 className={`text-[#111111] font-bold tracking-tight whitespace-nowrap transition-all duration-500 ${isScrolled ? "text-sm md:text-lg" : "text-base md:text-xl"}`}>
               NEW BISMI <span className="text-luxury-gold">GIFT HOUSE</span>
             </h1>
             {!isScrolled && (
-              <span className="text-[8px] uppercase tracking-[0.3em] text-luxury-dark/40 font-medium">Curated Luxury House</span>
+              <span className="text-[8px] uppercase tracking-[0.3em] text-[#444444] font-black">Curated Luxury House</span>
             )}
           </div>
         </Link>
@@ -90,8 +90,8 @@ const Navbar = () => {
             <Link
               key={link.name}
               href={link.href}
-              className={`text-[11px] font-bold uppercase tracking-[0.25em] transition-all duration-300 hover:text-luxury-gold relative group ${
-                pathname === link.href ? "text-luxury-dark" : "text-luxury-dark/60"
+              className={`text-[11px] font-black uppercase tracking-[0.25em] transition-all duration-300 hover:text-luxury-gold relative group ${
+                pathname === link.href ? "text-[#111111]" : "text-[#444444]"
               }`}
             >
               {link.name}
@@ -109,8 +109,8 @@ const Navbar = () => {
           {user ? (
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-luxury-pearl border border-luxury-platinum/50 shadow-sm">
-                <UserIcon size={14} className="text-luxury-gold" />
-                <span className="text-[11px] font-bold tracking-wider text-luxury-dark">{user.name.split(' ')[0]}</span>
+               <UserIcon size={14} className="text-luxury-gold" />
+                <span className="text-[11px] font-black tracking-wider text-[#111111]">{user.name.split(' ')[0]}</span>
               </div>
               <button
                 onClick={handleLogout}

@@ -31,7 +31,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
-          className="inline-flex items-center gap-3 px-8 py-3 rounded-2xl bg-white border border-luxury-platinum/50 text-[10px] font-bold uppercase tracking-[0.4em] mb-12 shadow-sm text-luxury-dark/60"
+          className="inline-flex items-center gap-3 px-8 py-3 rounded-2xl bg-white border border-luxury-platinum/50 text-[10px] font-black uppercase tracking-[0.4em] mb-12 shadow-sm text-luxury-dark/80"
         >
           <Sparkles size={14} className="text-luxury-gold" />
           <span>Established Masterpiece Selection</span>
@@ -45,7 +45,7 @@ const Hero = () => {
             initial={{ opacity: 0, filter: "blur(20px)", y: 60 }}
             animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
             transition={{ duration: 1.5, delay: 0.2, ease: [0.21, 0.47, 0.32, 0.98] }}
-            className="text-7xl md:text-[10rem] font-bold tracking-tighter leading-[0.85] text-luxury-dark"
+            className="text-7xl md:text-[10rem] font-bold tracking-tighter leading-[0.85] text-[#111111]"
           >
             CURATED <br />
             <span className="text-gold-gradient font-black italic">GIFT HOUSE</span>
@@ -55,7 +55,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.5 }}
-            className="text-luxury-dark/60 text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed font-medium"
+            className="text-[#444444] text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed font-bold"
           >
             The destination for elite collectors. Discover our vault of precision-crafted diecast models, luxury horology, and boutique artifacts.
           </motion.p>

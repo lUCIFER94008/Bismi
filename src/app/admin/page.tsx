@@ -155,7 +155,7 @@ const AdminDashboard = () => {
                <LayoutDashboard size={20} />
                <span className="text-sm font-bold uppercase tracking-widest">Exclusive Inventory</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white italic">Curated Collection</h1>
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-[#111111] italic">Curated Collection</h1>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
@@ -165,9 +165,9 @@ const AdminDashboard = () => {
                 placeholder="Search collection..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="glass-input pl-12 pr-6 py-4 w-full sm:w-64 text-sm focus:border-luxury-gold/50 transition-all"
+                className="glass-input pl-12 pr-6 py-4 w-full sm:w-64 text-sm focus:border-luxury-gold/50 transition-all text-[#111111] font-bold"
               />
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-luxury-gold transition-colors" size={18} />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#444444] group-focus-within:text-luxury-gold transition-colors" size={18} />
             </div>
             <button
               onClick={() => setIsCategoryModalOpen(true)}
@@ -200,10 +200,10 @@ const AdminDashboard = () => {
              >
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="text-gray-500 text-[10px] mb-1 uppercase tracking-widest font-bold">{stat.label}</p>
-                    <h3 className={`text-2xl font-bold ${stat.color || "text-white"}`}>{stat.value}</h3>
+                    <p className="text-[#666666] text-[10px] mb-1 uppercase tracking-widest font-bold">{stat.label}</p>
+                    <h3 className={`text-2xl font-bold ${stat.color || "text-[#111111]"}`}>{stat.value}</h3>
                   </div>
-                  <stat.icon className="text-gray-700 group-hover:text-luxury-gold transition-colors" size={24} />
+                  <stat.icon className="text-[#444444] group-hover:text-luxury-gold transition-colors" size={24} />
                 </div>
              </motion.div>
            ))}
@@ -215,11 +215,11 @@ const AdminDashboard = () => {
             <table className="w-full text-left border-collapse">
               <thead className="bg-white/5 border-b border-white/10">
                 <tr>
-                  <th className="p-6 font-bold text-[10px] uppercase tracking-[0.2em] text-gray-500">Masterpiece</th>
-                  <th className="p-6 font-bold text-[10px] uppercase tracking-[0.2em] text-gray-500">Category</th>
-                  <th className="p-6 font-bold text-[10px] uppercase tracking-[0.2em] text-gray-500">Valuation</th>
-                  <th className="p-6 font-bold text-[10px] uppercase tracking-[0.2em] text-gray-500">Acquisition Date</th>
-                  <th className="p-6 font-bold text-[10px] uppercase tracking-[0.2em] text-gray-500 text-right">Actions</th>
+                  <th className="p-6 font-bold text-[10px] uppercase tracking-[0.2em] text-[#666666]">Masterpiece</th>
+                  <th className="p-6 font-bold text-[10px] uppercase tracking-[0.2em] text-[#666666]">Category</th>
+                  <th className="p-6 font-bold text-[10px] uppercase tracking-[0.2em] text-[#666666]">Valuation</th>
+                  <th className="p-6 font-bold text-[10px] uppercase tracking-[0.2em] text-[#666666]">Acquisition Date</th>
+                  <th className="p-6 font-bold text-[10px] uppercase tracking-[0.2em] text-[#666666] text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
@@ -248,15 +248,15 @@ const AdminDashboard = () => {
                             <Image src={product.images?.[0] || "/placeholder.png"} alt={product.name} fill className="object-cover" sizes="56px" />
                             {product.images?.length > 1 && <div className="absolute bottom-0 right-0 bg-luxury-gold text-black text-[8px] font-black px-1 rounded-tl-md">+{product.images.length - 1}</div>}
                           </div>
-                          <Link href={`/product/${product._id}`} className="font-bold text-white group-hover:text-luxury-gold transition-colors block">
+                          <Link href={`/product/${product._id}`} className="font-bold text-[#111111] group-hover:text-luxury-gold transition-colors block">
                             {product.name}
-                            <span className="block text-[10px] text-gray-500 font-medium uppercase tracking-widest mt-0.5">ID: {product._id.slice(-6)}</span>
+                            <span className="block text-[10px] text-[#666666] font-medium uppercase tracking-widest mt-0.5">ID: {product._id.slice(-6)}</span>
                           </Link>
                         </div>
                       </td>
-                      <td className="p-6"><span className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-gray-400">{product.category}</span></td>
-                      <td className="p-6 font-bold text-white tracking-tight">₹{Number(product.price).toLocaleString()}</td>
-                      <td className="p-6 text-gray-500 text-[11px] font-bold uppercase tracking-widest">{new Date(product.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}</td>
+                      <td className="p-6"><span className="px-4 py-1.5 rounded-full bg-white/50 border border-luxury-platinum/50 text-[10px] font-black uppercase tracking-widest text-[#444444]">{product.category}</span></td>
+                      <td className="p-6 font-bold text-[#111111] tracking-tight">₹{Number(product.price).toLocaleString()}</td>
+                      <td className="p-6 text-[#666666] text-[11px] font-bold uppercase tracking-widest">{new Date(product.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}</td>
                       <td className="p-6 text-right">
                         <div className="flex justify-end gap-2">
                            <Link href={`/product/${product._id}`} className="p-3 rounded-xl bg-white/5 text-gray-500 hover:bg-white/10 hover:text-white transition-all border border-white/10"><FileText size={18} /></Link>

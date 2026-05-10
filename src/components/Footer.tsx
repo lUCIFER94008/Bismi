@@ -21,10 +21,10 @@ const Footer = () => {
             </div>
             <div className="space-y-1">
               <span className="font-bold text-xl tracking-tighter text-luxury-dark uppercase">NEW BISMI <span className="text-luxury-gold italic">GIFT HOUSE</span></span>
-              <p className="text-[9px] uppercase tracking-[0.4em] text-luxury-dark/40 font-bold">Curated Luxury House</p>
+              <p className="text-[9px] uppercase tracking-[0.4em] text-luxury-dark/60 font-black">Curated Luxury House</p>
             </div>
           </Link>
-          <p className="text-luxury-dark/50 text-[13px] leading-relaxed font-medium">
+          <p className="text-[#444444] text-[13px] leading-relaxed font-semibold">
             Discover a curated world of luxury artifacts, precision diecast models, and boutique collectibles crafted for the discerning eye.
           </p>
           <div className="flex gap-4">
@@ -39,7 +39,7 @@ const Footer = () => {
         {/* Quick Links */}
         <div className="space-y-8">
           <h4 className="font-bold uppercase tracking-[0.3em] text-[11px] text-luxury-dark">The Vault</h4>
-          <ul className="space-y-5 text-luxury-dark/60 text-[13px] font-medium">
+          <ul className="space-y-5 text-[#444444] text-[13px] font-bold">
             <li><Link href="/" className="hover:text-luxury-gold transition-colors">Gift House Home</Link></li>
             <li><Link href="/products" className="hover:text-luxury-gold transition-colors">Full Collection</Link></li>
             <li><a href="#contact" className="hover:text-luxury-gold transition-colors">Private Inquiry</a></li>
@@ -49,7 +49,7 @@ const Footer = () => {
         {/* Categories */}
         <div className="space-y-8">
           <h4 className="font-bold uppercase tracking-[0.3em] text-[11px] text-luxury-dark">Collections</h4>
-          <ul className="space-y-5 text-luxury-dark/60 text-[13px] font-medium">
+          <ul className="space-y-5 text-[#444444] text-[13px] font-bold">
             <li><Link href="/products?category=Toys" className="hover:text-luxury-gold transition-colors">Masterpiece Toys</Link></li>
             <li><Link href="/products?category=Watches" className="hover:text-luxury-gold transition-colors">Elite Horology</Link></li>
             <li><Link href="/products?category=Diecast" className="hover:text-luxury-gold transition-colors">Precision Diecast</Link></li>
@@ -60,14 +60,14 @@ const Footer = () => {
         {/* Contact */}
         <div id="contact" className="space-y-8">
           <h4 className="font-bold uppercase tracking-[0.3em] text-[11px] text-luxury-dark">The Residency</h4>
-          <ul className="space-y-6 text-luxury-dark/60 text-[13px] font-medium">
+          <ul className="space-y-6 text-[#444444] text-[13px] font-bold">
             <li className="flex gap-4">
               <MapPin size={18} strokeWidth={1.5} className="text-luxury-gold shrink-0" />
               <span>17, Desabhimani Rd, Palarivattom, Kochi, Kerala 682017</span>
             </li>
             <li className="flex gap-4">
               <Phone size={18} strokeWidth={1.5} className="text-luxury-gold shrink-0" />
-              <span className="font-bold text-luxury-dark">+91 9605773773</span>
+              <span className="font-bold text-[#111111]">+91 9605773773</span>
             </li>
           </ul>
         </div>

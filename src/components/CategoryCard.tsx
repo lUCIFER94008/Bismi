@@ -35,7 +35,7 @@ const CategoryCard = ({ name, icon, delay = 0 }: CategoryCardProps) => {
           <span className="text-5xl mb-6 block group-hover:scale-125 group-hover:rotate-12 transition-transform duration-500 relative z-10">
             {icon}
           </span>
-          <span className="font-bold tracking-[0.2em] uppercase text-[10px] text-gray-400 group-hover:text-white transition-colors relative z-10">
+          <span className="font-bold tracking-[0.2em] uppercase text-[10px] text-luxury-dark/60 group-hover:text-luxury-dark transition-colors relative z-10">
             {name}
           </span>
           

@@ -14,22 +14,26 @@ import Magnetic from "@/components/Magnetic";
 import ScrollProgress from "@/components/ScrollProgress";
 import { CATEGORIES } from "@/constants/categories";
 
+import { getDynamicCategories } from "@/lib/categories";
+
 export default async function Home() {
   let featuredProducts: any[] = [];
+  let dynamicCategories: any[] = [];
+  
   try {
-    // Add a small timeout to DB connection to prevent page stall
-    await Promise.race([
-      connectDB(),
-      new Promise((_, reject) => setTimeout(() => reject(new Error("Database Connection Timeout")), 8000))
-    ]);
+    await connectDB();
     
-    featuredProducts = await Product.find()
+    // Fetch latest 8 products for the vault
+    const productsRaw = await Product.find()
       .sort({ createdAt: -1 })
       .limit(8)
       .lean();
+    
+    featuredProducts = JSON.parse(JSON.stringify(productsRaw));
+    dynamicCategories = await getDynamicCategories();
+    
   } catch (error) {
     console.error("Critical Data Fetch Error:", error);
-    // Continue rendering with empty products to avoid blank page
   }
 
   return (
@@ -44,19 +48,19 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12">
           {[
             { label: "Established House", value: 2014, suffix: "", icon: Clock },
-            { label: "Curated Artifacts", value: 1000, suffix: "+", icon: Star },
+            { label: "Curated Artifacts", value: featuredProducts.length * 12, suffix: "+", icon: Star },
             { label: "Elite Collectors", value: 5000, suffix: "+", icon: ShieldCheck },
             { label: "Global Presence", value: 50, suffix: "+", icon: Truck },
           ].map((stat, i) => (
             <ScrollReveal key={stat.label} delay={i * 0.1}>
-              <div className="glass-card p-8 md:p-12 text-center group hover:border-luxury-gold/50 transition-all duration-700 bg-white/40 shadow-sm hover:shadow-xl">
-                <div className="w-16 h-16 mx-auto mb-8 rounded-2xl bg-luxury-pearl border border-luxury-platinum/50 flex items-center justify-center text-luxury-gold group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+              <div className="glass-card p-8 md:p-12 text-center group hover:border-luxury-gold/50 transition-all duration-700 bg-white/60 shadow-sm hover:shadow-xl">
+                <div className="w-16 h-16 mx-auto mb-8 rounded-2xl bg-luxury-pearl border border-luxury-platinum/50 flex items-center justify-center text-luxury-gold group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-inner">
                   <stat.icon size={28} strokeWidth={1.5} />
                 </div>
                 <h3 className="text-4xl md:text-6xl font-bold mb-3 tracking-tighter text-luxury-dark">
                   <AnimatedCounter to={stat.value} suffix={stat.suffix} />
                 </h3>
-                <p className="text-luxury-dark/40 text-[10px] uppercase tracking-[0.4em] font-bold">{stat.label}</p>
+                <p className="text-luxury-dark/60 text-[10px] uppercase tracking-[0.4em] font-bold">{stat.label}</p>
               </div>
             </ScrollReveal>
           ))}
@@ -75,11 +79,11 @@ export default async function Home() {
                 </h2>
                 <div className="flex items-center gap-6">
                   <div className="w-16 h-[1.5px] bg-luxury-gold" />
-                  <p className="text-luxury-dark/50 text-[11px] uppercase tracking-[0.5em] font-bold">Masterpieces for Discerning Collectors</p>
+                  <p className="text-luxury-dark/60 text-[11px] uppercase tracking-[0.5em] font-bold">Latest Masterpieces from the Collection</p>
                 </div>
               </div>
               <Magnetic>
-                <Link href="/products" className="hidden md:flex items-center gap-4 text-luxury-dark hover:text-luxury-gold transition-colors font-bold text-[11px] uppercase tracking-[0.4em] group pb-4">
+                <Link href="/products" className="hidden md:flex items-center gap-4 text-luxury-dark hover:text-luxury-gold transition-colors font-bold text-[11px] uppercase tracking-[0.4em] group pb-4 border-b border-luxury-platinum/50">
                   Enter Catalog <ArrowRight size={20} className="group-hover:translate-x-3 transition-transform duration-500" />
                 </Link>
               </Magnetic>
@@ -90,15 +94,15 @@ export default async function Home() {
             <div className="flex gap-10 overflow-x-auto pb-16 pt-4 hide-scrollbar snap-x-mandatory scroll-smooth" id="product-slider">
               {featuredProducts.length > 0 ? (
                 featuredProducts.map((product: any, i: number) => (
-                  <div key={product._id.toString()} className="min-w-[320px] md:min-w-[420px] snap-center">
+                  <div key={product._id} className="min-w-[320px] md:min-w-[420px] snap-center">
                     <ScrollReveal delay={i * 0.1}>
-                      <ProductCard product={JSON.parse(JSON.stringify(product))} />
+                      <ProductCard product={product} />
                     </ScrollReveal>
                   </div>
                 ))
               ) : (
                 <div className="w-full py-48 text-center glass-card border-luxury-platinum/50 bg-white/40">
-                  <p className="text-luxury-dark/40 font-bold text-xl uppercase tracking-[0.4em]">The vault is currently being curated.</p>
+                  <p className="text-luxury-dark font-bold text-xl uppercase tracking-[0.4em]">The vault is currently being curated.</p>
                 </div>
               )}
             </div>
@@ -107,27 +111,27 @@ export default async function Home() {
       </section>
 
       {/* Categories Section - The Gift House */}
-      <section className="py-40 px-6 relative z-10 overflow-hidden bg-luxury-pearl/30 border-y border-luxury-platinum/30 backdrop-blur-3xl">
+      <section className="py-40 px-6 relative z-10 overflow-hidden bg-luxury-pearl/50 border-y border-luxury-platinum/30 backdrop-blur-3xl">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
             <div className="text-center mb-24 space-y-4">
               <h2 className="text-6xl md:text-8xl font-bold tracking-tighter text-luxury-dark leading-[0.9]">
                 BROWSE <span className="text-gold-gradient italic font-black">COLLECTIONS</span>
               </h2>
-              <p className="text-luxury-dark/40 text-[11px] uppercase tracking-[0.6em] font-bold">Explore Our Diverse Departments</p>
+              <p className="text-luxury-dark/60 text-[11px] uppercase tracking-[0.6em] font-bold">Explore Our Dynamic Departments</p>
             </div>
           </ScrollReveal>
           
-          <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-8">
-            {CATEGORIES.map((cat, i) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-8">
+            {dynamicCategories.map((cat, i) => (
               <CategoryCard key={cat.name} name={cat.name} icon={cat.icon} delay={i * 0.05} />
             ))}
-            <ScrollReveal delay={CATEGORIES.length * 0.05}>
+            <ScrollReveal delay={dynamicCategories.length * 0.05}>
               <Link 
                 href="/products"
-                className="glass-card p-10 h-full flex flex-col items-center justify-center text-center group border-luxury-platinum/50 bg-white/60 hover:bg-white hover:border-luxury-gold transition-all duration-700 shadow-sm"
+                className="glass-card p-10 h-full flex flex-col items-center justify-center text-center group border-luxury-platinum/50 bg-white/80 hover:bg-white hover:border-luxury-gold transition-all duration-700 shadow-sm"
               >
-                <div className="w-16 h-16 rounded-full bg-luxury-pearl border border-luxury-platinum/50 flex items-center justify-center mb-6 group-hover:bg-luxury-dark group-hover:text-white transition-all duration-500">
+                <div className="w-16 h-16 rounded-full bg-luxury-pearl border border-luxury-platinum/50 flex items-center justify-center mb-6 group-hover:bg-luxury-dark group-hover:text-white transition-all duration-500 shadow-inner">
                   <ArrowRight className="group-hover:translate-x-1 transition-transform" size={24} />
                 </div>
                 <span className="font-bold tracking-[0.3em] uppercase text-[11px] text-luxury-dark">All Collections</span>

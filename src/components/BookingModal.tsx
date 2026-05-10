@@ -125,9 +125,9 @@ Thank you.
                 </div>
                 <div className="text-center space-y-3">
                   <span className="text-[10px] uppercase font-bold tracking-[0.4em] text-luxury-gold block">Exclusive Selection</span>
-                  <h3 className="text-2xl font-bold text-luxury-dark leading-tight">{product.name}</h3>
+                  <h3 className="text-2xl font-bold text-[#111111] leading-tight">{product.name}</h3>
                   <div className="w-12 h-[1.5px] bg-luxury-gold/30 mx-auto" />
-                  <p className="text-3xl font-bold text-luxury-dark">₹{product.price.toLocaleString()}</p>
+                  <p className="text-3xl font-bold text-[#111111]">₹{product.price.toLocaleString()}</p>
                 </div>
               </div>
 
@@ -138,15 +138,15 @@ Thank you.
                     <ShoppingBag size={28} strokeWidth={1.5} />
                   </div>
                   <div className="space-y-1">
-                    <h2 className="text-2xl font-bold text-luxury-dark uppercase tracking-tight">Acquire Artifact</h2>
-                    <p className="text-luxury-dark/40 text-[10px] uppercase tracking-[0.3em] font-bold">Secure Private Order Flow</p>
+                    <h2 className="text-2xl font-bold text-[#111111] uppercase tracking-tight">Acquire Artifact</h2>
+                    <p className="text-luxury-dark/60 text-[10px] uppercase tracking-[0.3em] font-black">Secure Private Order Flow</p>
                   </div>
                 </div>
 
                 <form onSubmit={handleBooking} className="space-y-8">
                   {/* Name Input */}
                   <div className="space-y-3">
-                    <label className="text-[10px] font-bold text-luxury-dark/50 uppercase tracking-[0.2em] flex items-center gap-2">
+                    <label className="text-[10px] font-bold text-[#444444] uppercase tracking-[0.2em] flex items-center gap-2">
                        Your Full Name
                     </label>
                     <div className="relative">
@@ -156,7 +156,7 @@ Thank you.
                         required
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="glass-input w-full pl-14 pr-6 py-5 text-[13px] font-bold text-luxury-dark placeholder:text-luxury-dark/20"
+                        className="glass-input w-full pl-14 pr-6 py-5 text-[13px] font-bold text-[#111111] placeholder:text-luxury-dark/30"
                         placeholder="e.g. Alexander Sterling"
                       />
                     </div>
@@ -164,7 +164,7 @@ Thank you.
 
                   {/* Phone Input */}
                   <div className="space-y-3">
-                    <label className="text-[10px] font-bold text-luxury-dark/50 uppercase tracking-[0.2em] flex items-center gap-2">
+                    <label className="text-[10px] font-bold text-[#444444] uppercase tracking-[0.2em] flex items-center gap-2">
                        Communication Line
                     </label>
                     <div className="relative">
@@ -174,7 +174,7 @@ Thank you.
                         required
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="glass-input w-full pl-14 pr-6 py-5 text-[13px] font-bold text-luxury-dark placeholder:text-luxury-dark/20"
+                        className="glass-input w-full pl-14 pr-6 py-5 text-[13px] font-bold text-[#111111] placeholder:text-luxury-dark/30"
                         placeholder="e.g. +91 96057 73773"
                       />
                     </div>
@@ -183,7 +183,7 @@ Thank you.
                   {/* Quantity & Notes Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <div className="space-y-3">
-                      <label className="text-[10px] font-bold text-luxury-dark/50 uppercase tracking-[0.2em]">
+                      <label className="text-[10px] font-bold text-[#444444] uppercase tracking-[0.2em]">
                         Acquisition Units
                       </label>
                       <div className="flex items-center gap-4 bg-white rounded-2xl p-2 border border-luxury-platinum/50 shadow-sm">
@@ -194,7 +194,7 @@ Thank you.
                         >
                           <Minus size={16} />
                         </button>
-                        <span className="flex-1 text-center font-bold text-lg text-luxury-dark">{formData.quantity}</span>
+                        <span className="flex-1 text-center font-bold text-lg text-[#111111]">{formData.quantity}</span>
                         <button
                           type="button"
                           onClick={() => setFormData({ ...formData, quantity: formData.quantity + 1 })}
@@ -206,7 +206,7 @@ Thank you.
                     </div>
 
                     <div className="space-y-3">
-                      <label className="text-[10px] font-bold text-luxury-dark/50 uppercase tracking-[0.2em]">
+                      <label className="text-[10px] font-bold text-[#444444] uppercase tracking-[0.2em]">
                         Private Notes
                       </label>
                       <div className="relative">
@@ -214,7 +214,7 @@ Thank you.
                         <textarea
                           value={formData.notes}
                           onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                          className="glass-input w-full pl-12 pr-6 py-4 resize-none h-[58px] text-[12px] font-medium text-luxury-dark placeholder:text-luxury-dark/20"
+                          className="glass-input w-full pl-12 pr-6 py-4 resize-none h-[58px] text-[12px] font-bold text-[#111111] placeholder:text-luxury-dark/30"
                           placeholder="Special requests..."
                         />
                       </div>
