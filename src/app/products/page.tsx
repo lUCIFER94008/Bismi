@@ -18,11 +18,9 @@ const ProductsContent = () => {
   const [loading, setLoading] = useState(true);
   const [totalProductsCount, setTotalProductsCount] = useState(0);
   
-  // Local state for UI
   const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "All");
 
-  // Sync state with URL when it changes (e.g. back button)
   useEffect(() => {
     setSelectedCategory(searchParams.get("category") || "All");
     setSearchTerm(searchParams.get("search") || "");
@@ -74,24 +72,10 @@ const ProductsContent = () => {
     router.push(`/products?${params.toString()}`, { scroll: false });
   };
 
-  const handleCategoryChange = (cat: string) => {
-    setSelectedCategory(cat);
-    updateFilters(cat, searchTerm);
-  };
-
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     updateFilters(selectedCategory, searchTerm);
   };
-
-  // Combine static CATEGORIES with db counts
-  const categoryFilters = [
-    { name: "All", icon: "✨", count: totalProductsCount },
-    ...CATEGORIES.map(cat => ({
-      ...cat,
-      count: dbCategories.find(dbCat => dbCat.name === cat.name)?.count || 0
-    }))
-  ];
 
   return (
     <div className="max-w-7xl mx-auto px-6 mb-32">
@@ -111,8 +95,7 @@ const ProductsContent = () => {
         </div>
 
         <div className="w-full lg:w-auto pt-8">
-          {/* Search */}
-          <ScrollReveal direction="left">
+          <ScrollReveal>
             <form onSubmit={handleSearchSubmit} className="relative group">
               <input
                 type="text"
@@ -137,9 +120,6 @@ const ProductsContent = () => {
         </div>
       </div>
 
-      {/* Category Filter Navigation removed in favor of Mega-Menu Navbar */}
-
-      {/* Products Grid */}
       <AnimatePresence mode="wait">
         {loading ? (
           <motion.div 
@@ -156,34 +136,22 @@ const ProductsContent = () => {
         ) : products.length > 0 ? (
           <motion.div 
             key="products"
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: { staggerChildren: 0.08 }
-              }
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-12"
           >
             {products.map((product: any) => (
-              <motion.div
-                key={product._id}
-                variants={{
-                  hidden: { opacity: 0, y: 30, filter: "blur(10px)" },
-                  visible: { opacity: 1, y: 0, filter: "blur(0px)" }
-                }}
-              >
+              <div key={product._id}>
                 <ProductCard product={product} />
-              </motion.div>
+              </div>
             ))}
           </motion.div>
         ) : (
           <motion.div 
             key="empty"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             className="glass-card py-48 text-center border-luxury-platinum/50 bg-white/40 shadow-sm"
           >
             <div className="max-w-md mx-auto space-y-10">
@@ -223,4 +191,3 @@ const ProductsPage = () => {
 };
 
 export default ProductsPage;
-

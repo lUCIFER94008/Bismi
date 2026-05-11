@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useInView, animate } from "framer-motion";
+import { useEffect, useState } from "react";
+import { animate } from "framer-motion";
 
 interface AnimatedCounterProps {
   from?: number;
@@ -11,25 +11,23 @@ interface AnimatedCounterProps {
   className?: string;
 }
 
-const AnimatedCounter = ({ from = 0, to, duration = 2, suffix = "", className = "" }: AnimatedCounterProps) => {
+const AnimatedCounter = ({ from = 0, to, duration = 1.5, suffix = "", className = "" }: AnimatedCounterProps) => {
   const [count, setCount] = useState(from);
-  const nodeRef = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(nodeRef, { once: true, margin: "-100px" });
 
   useEffect(() => {
-    if (isInView) {
-      const controls = animate(from, to, {
-        duration,
-        onUpdate(value) {
-          setCount(Math.floor(value));
-        },
-      });
-      return () => controls.stop();
-    }
-  }, [isInView, from, to, duration]);
+    // Simple mount animation instead of scroll-triggered
+    const controls = animate(from, to, {
+      duration,
+      onUpdate(value) {
+        setCount(Math.floor(value));
+      },
+      ease: "easeOut"
+    });
+    return () => controls.stop();
+  }, [from, to, duration]);
 
   return (
-    <span ref={nodeRef} className={className}>
+    <span className={className}>
       {count}
       {suffix}
     </span>

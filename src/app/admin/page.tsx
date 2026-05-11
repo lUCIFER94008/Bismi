@@ -5,7 +5,7 @@ import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import CategoryDropdown from "@/components/CategoryDropdown";
 import ImageUpload from "@/components/ImageUpload";
-import { Plus, Trash2, LayoutDashboard, Package, Loader2, X, FileText, DollarSign, Image as ImageIcon, Search } from "lucide-react";
+import { Plus, Trash2, LayoutDashboard, Package, Loader2, X, FileText, DollarSign, Image as ImageIcon, Search, Edit2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -18,6 +18,7 @@ const AdminDashboard = () => {
   const [submitting, setSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [dbCategories, setDbCategories] = useState<any[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -80,6 +81,18 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleEdit = (product: any) => {
+    setEditingId(product._id);
+    setFormData({
+      name: product.name,
+      price: product.price.toString(),
+      category: product.category,
+      description: product.description || "",
+      images: product.images || [],
+    });
+    setIsModalOpen(true);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.images.length === 0) {
@@ -94,8 +107,11 @@ const AdminDashboard = () => {
     setSubmitting(true);
 
     try {
-      const res = await fetch("/api/products", {
-        method: "POST",
+      const url = editingId ? `/api/products/${editingId}` : "/api/products";
+      const method = editingId ? "PUT" : "POST";
+      
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
@@ -103,13 +119,14 @@ const AdminDashboard = () => {
       const data = await res.json();
 
       if (res.ok) {
-        toast.success("Masterpiece published successfully");
+        toast.success(editingId ? "Masterpiece updated" : "Masterpiece published successfully");
         setIsModalOpen(false);
+        setEditingId(null);
         setFormData({ name: "", price: "", category: "", description: "", images: [] });
         fetchProducts();
-        fetchCategories(); // Refresh categories
+        fetchCategories();
       } else {
-        toast.error(data.error || "Failed to add product");
+        toast.error(data.error || "Failed to process request");
       }
     } catch {
       toast.error("An unexpected error occurred");
@@ -260,6 +277,7 @@ const AdminDashboard = () => {
                       <td className="p-6 text-right">
                         <div className="flex justify-end gap-2">
                            <Link href={`/product/${product._id}`} className="p-3 rounded-xl bg-[#F8F8F8] text-[#555555] hover:bg-white hover:text-luxury-gold transition-all border border-[#E5E4E2]"><FileText size={18} /></Link>
+                           <button onClick={() => handleEdit(product)} className="p-3 rounded-xl bg-luxury-gold/5 text-luxury-gold hover:bg-luxury-gold hover:text-white transition-all border border-luxury-gold/10 hover:border-luxury-gold group-hover:shadow-[0_0_20px_rgba(200,161,75,0.2)]"><Edit2 size={18} /></button>
                            <button onClick={() => handleDelete(product._id)} className="p-3 rounded-xl bg-red-500/5 text-red-500 hover:bg-red-500 hover:text-white transition-all border border-red-500/10 hover:border-red-500 group-hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"><Trash2 size={18} /></button>
                         </div>
                       </td>
@@ -300,8 +318,8 @@ const AdminDashboard = () => {
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 sm:p-12 overflow-y-auto no-scrollbar">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="fixed inset-0 bg-white/80 backdrop-blur-xl" />
             <motion.div initial={{ opacity: 0, y: 50, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 50, scale: 0.95 }} className="glass-card w-full max-w-5xl relative z-10 p-8 md:p-12 border-[#E5E4E2] shadow-[0_0_100px_rgba(0,0,0,0.1)]">
-              <div className="absolute top-8 right-8"><button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-[#F8F8F8] rounded-full transition-all hover:rotate-90 text-[#6B7280] hover:text-[#111111]"><X size={24} /></button></div>
-              <div className="flex items-center gap-6 mb-12"><div className="p-4 rounded-3xl bg-luxury-gold/10 border border-luxury-gold/20 shadow-[0_0_30px_rgba(200,161,75,0.1)]"><Plus className="text-luxury-gold" size={32} /></div><div><h2 className="text-3xl md:text-4xl font-bold tracking-tight text-[#111111] uppercase italic">Add Masterpiece</h2><p className="text-[#6B7280] text-[10px] uppercase tracking-[0.3em] mt-2 font-black">Elite Collection Management</p></div></div>
+              <div className="absolute top-8 right-8"><button onClick={() => { setIsModalOpen(false); setEditingId(null); setFormData({ name: "", price: "", category: "", description: "", images: [] }); }} className="p-3 hover:bg-[#F8F8F8] rounded-full transition-all hover:rotate-90 text-[#6B7280] hover:text-[#111111]"><X size={24} /></button></div>
+              <div className="flex items-center gap-6 mb-12"><div className="p-4 rounded-3xl bg-luxury-gold/10 border border-luxury-gold/20 shadow-[0_0_30px_rgba(200,161,75,0.1)]">{editingId ? <Edit2 className="text-luxury-gold" size={32} /> : <Plus className="text-luxury-gold" size={32} />}</div><div><h2 className="text-3xl md:text-4xl font-bold tracking-tight text-[#111111] uppercase italic">{editingId ? "Edit Masterpiece" : "Add Masterpiece"}</h2><p className="text-[#6B7280] text-[10px] uppercase tracking-[0.3em] mt-2 font-black">Elite Collection Management</p></div></div>
               <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <div className="space-y-10">
                   <div className="space-y-4"><label className="text-[10px] font-black text-[#6B7280] flex items-center gap-2 uppercase tracking-[0.2em]"><ImageIcon size={16} className="text-luxury-gold" /> Visual Assets (Up to 10)</label><ImageUpload value={formData.images} onChange={(urls) => setFormData({ ...formData, images: urls })} /></div>
@@ -311,7 +329,7 @@ const AdminDashboard = () => {
                   <div className="space-y-4"><label className="text-[10px] font-black text-[#6B7280] uppercase tracking-[0.2em]">Artifact Title</label><div className="relative group"><input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50 text-[#111111] font-bold" placeholder="e.g. Vintage Diecast Racing Car" /><FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-[#7C7C7C] group-focus-within:text-luxury-gold transition-colors" size={18} /></div></div>
                   <div className="space-y-4"><label className="text-[10px] font-black text-[#6B7280] uppercase tracking-[0.2em]">Acquisition Value (₹)</label><div className="relative group"><input type="number" required value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className="glass-input w-full pl-12 group-focus-within:border-luxury-gold/50 text-[#111111] font-black text-xl" placeholder="0" /><div className="absolute left-4 top-1/2 -translate-y-1/2 text-luxury-gold font-bold text-xl">₹</div></div></div>
                   <div className="space-y-4"><label className="text-[10px] font-black text-[#6B7280] uppercase tracking-[0.2em]">Narrative & Description</label><textarea required rows={5} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="glass-input w-full resize-none focus:border-luxury-gold/50 text-[#111111] leading-relaxed font-medium" placeholder="Describe the exclusivity and history of this masterpiece..." /></div>
-                  <div className="flex gap-6 pt-6"><button type="button" onClick={() => setIsModalOpen(false)} className="btn-platinum flex-1 py-5 text-[10px] font-black tracking-[0.3em] uppercase">Cancel</button><button type="submit" disabled={submitting || formData.images.length === 0 || !formData.category} className="btn-luxury flex-1 py-5 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3 text-[10px] font-black tracking-[0.3em] uppercase">{submitting ? <><Loader2 className="animate-spin" size={20} /> Processing...</> : <>Publish to Vault <Plus size={20} /></>}</button></div>
+                  <div className="flex gap-6 pt-6"><button type="button" onClick={() => { setIsModalOpen(false); setEditingId(null); setFormData({ name: "", price: "", category: "", description: "", images: [] }); }} className="btn-platinum flex-1 py-5 text-[10px] font-black tracking-[0.3em] uppercase">Cancel</button><button type="submit" disabled={submitting || formData.images.length === 0 || !formData.category} className="btn-luxury flex-1 py-5 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3 text-[10px] font-black tracking-[0.3em] uppercase">{submitting ? <><Loader2 className="animate-spin" size={20} /> Processing...</> : <>{editingId ? "Update Collection" : "Publish to Vault"} {editingId ? <Edit2 size={20} /> : <Plus size={20} />}</>}</button></div>
                 </div>
               </form>
             </motion.div>

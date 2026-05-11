@@ -12,16 +12,12 @@ interface CategoryCardProps {
 const CategoryCard = ({ name, icon, delay = 0 }: CategoryCardProps) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, delay }}
-      whileHover={{ 
-        scale: 1.05,
-        y: -10,
-        transition: { duration: 0.3 }
-      }}
-      className="relative group"
+        whileHover={{ 
+          scale: 1.05,
+          y: -10,
+          transition: { duration: 0.3 }
+        }}
+        className="relative group"
     >
       <Link 
         href={`/products?category=${encodeURIComponent(name)}`}

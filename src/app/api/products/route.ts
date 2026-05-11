@@ -17,7 +17,10 @@ export async function GET(req: Request) {
       query.category = { $regex: new RegExp(category, "i") };
     }
     if (search) {
-      query.name = { $regex: search, $options: "i" };
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } }
+      ];
     }
 
     // Sort by newest first

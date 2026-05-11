@@ -32,9 +32,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <>
       <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
         whileHover={{ 
           y: -15,
           scale: 1.02,

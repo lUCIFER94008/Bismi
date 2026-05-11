@@ -41,10 +41,10 @@ const CategoryMegaMenu = ({ category, count, icon }: CategoryMegaMenuProps) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30, scale: 0.95, filter: "blur(15px)" }}
-      animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-      exit={{ opacity: 0, y: 20, scale: 0.95, filter: "blur(15px)" }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.98 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
       className="absolute top-full left-1/2 -translate-x-1/2 mt-8 w-[95vw] max-w-3xl p-10 glass-card border-luxury-gold/30 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] z-[60] bg-white/98 backdrop-blur-3xl rounded-[3.5rem] overflow-hidden"
     >
       {/* Background Decorative Element */}
@@ -96,9 +96,9 @@ const CategoryMegaMenu = ({ category, count, icon }: CategoryMegaMenuProps) => {
               {products.map((product, i) => (
                 <motion.div
                   key={product._id}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: i * 0.05 }}
                   className="group/item"
                 >
                   <Link href={`/product/${product._id}`} className="block space-y-4">

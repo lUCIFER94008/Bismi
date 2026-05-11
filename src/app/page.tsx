@@ -11,7 +11,6 @@ import ScrollReveal from "@/components/ScrollReveal";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import CategoryCard from "@/components/CategoryCard";
 import Magnetic from "@/components/Magnetic";
-import ScrollProgress from "@/components/ScrollProgress";
 import { CATEGORIES } from "@/constants/categories";
 
 import { getDynamicCategories } from "@/lib/categories";
@@ -40,7 +39,6 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen relative overflow-x-hidden selection:bg-luxury-gold selection:text-white bg-transparent">
-      <ScrollProgress />
 
       <Navbar />
       <Hero />

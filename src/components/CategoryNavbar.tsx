@@ -72,7 +72,7 @@ const CategoryNavbar = () => {
     <div className="relative w-full">
       <div 
         id="category-nav-container"
-        className="relative w-full border-t border-luxury-platinum/10 mt-4 pt-4 pb-4 hidden lg:block bg-white/40 backdrop-blur-md overflow-x-auto luxury-scrollbar cursor-grab active:cursor-grabbing"
+        className="relative w-full border-t border-luxury-platinum/10 mt-4 pt-4 pb-4 bg-white/40 backdrop-blur-md overflow-x-auto luxury-scrollbar cursor-grab active:cursor-grabbing"
         onMouseLeave={() => setHoveredCategory(null)}
       >
         <style jsx global>{`
@@ -138,11 +138,8 @@ const CategoryNavbar = () => {
                 
                 {/* Active Underline */}
                 {activeCategory === cat.name && (
-                  <motion.div
-                    layoutId="activeCategory"
+                  <div
                     className="absolute bottom-0 left-6 right-6 h-[1.5px] bg-luxury-gold"
-                    initial={false}
-                    transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
                   />
                 )}
               </button>

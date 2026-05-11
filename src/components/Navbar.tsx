@@ -11,17 +11,12 @@ import CategoryNavbar from "./CategoryNavbar";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<{ name: string; role: string } | null>(null);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+
   useEffect(() => {
     setMounted(true);
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -63,10 +58,10 @@ const Navbar = () => {
   }
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-4 sm:px-6 ${isScrolled ? "py-3" : "py-8"}`}>
-      <div className={`max-w-7xl mx-auto flex items-center justify-between glass-card px-4 sm:px-8 border-luxury-platinum/50 transition-all duration-500 ${isScrolled ? "py-3 shadow-xl" : "py-5 shadow-none"}`}>
+    <nav className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-6">
+      <div className="max-w-7xl mx-auto flex items-center justify-between glass-card px-4 sm:px-8 border-luxury-platinum/50 py-4 shadow-xl">
         <Link href="/" className="flex items-center gap-4 min-w-[200px] md:min-w-[340px] group">
-          <div className={`rounded-2xl overflow-hidden bg-white shadow-sm border border-luxury-platinum/30 group-hover:scale-105 group-hover:rotate-3 transition-all duration-700 relative shrink-0 ${isScrolled ? "w-10 h-10" : "w-12 h-12"}`}>
+          <div className="rounded-2xl overflow-hidden bg-white shadow-sm border border-luxury-platinum/30 transition-all duration-700 relative shrink-0 w-12 h-12">
             <Image 
               src="https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png" 
               alt="NEW BISMI Logo" 
@@ -77,12 +72,10 @@ const Navbar = () => {
             />
           </div>
           <div className="flex flex-col">
-            <h1 className={`text-[#111111] font-bold tracking-tight whitespace-nowrap transition-all duration-500 ${isScrolled ? "text-sm md:text-lg" : "text-base md:text-xl"}`}>
+            <h1 className="text-[#111111] font-bold tracking-tight whitespace-nowrap text-base md:text-xl">
               NEW BISMI <span className="text-luxury-gold">GIFT HOUSE</span>
             </h1>
-            {!isScrolled && (
-              <span className="text-[8px] uppercase tracking-[0.3em] text-[#444444] font-black">Curated Luxury House</span>
-            )}
+            <span className="text-[8px] uppercase tracking-[0.3em] text-[#444444] font-black">Curated Luxury House</span>
           </div>
         </Link>
 
@@ -97,10 +90,8 @@ const Navbar = () => {
               }`}
             >
               {link.name}
-              <motion.div 
-                className={`absolute -bottom-2 left-0 right-0 h-[1.5px] bg-luxury-gold ${pathname === link.href ? "opacity-100" : "opacity-0 group-hover:opacity-100 scale-x-0 group-hover:scale-x-100"}`}
-                initial={false}
-                transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+              <div 
+                className={`absolute -bottom-2 left-0 right-0 h-[1.5px] bg-luxury-gold transition-all duration-400 ${pathname === link.href ? "opacity-100" : "opacity-0 group-hover:opacity-100 scale-x-0 group-hover:scale-x-100"}`}
               />
             </Link>
           ))}
@@ -139,7 +130,7 @@ const Navbar = () => {
       </div>
 
       {/* Luxury Category Navigation - Only Desktop & Only Products Page */}
-      {mounted && !isScrolled && pathname === "/products" && <CategoryNavbar />}
+      {mounted && pathname === "/products" && <CategoryNavbar />}
 
       {/* Mobile Menu */}
       <AnimatePresence>
