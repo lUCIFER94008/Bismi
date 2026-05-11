@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ShoppingCart, ArrowUpRight, Image as ImageIcon } from "lucide-react";
-import ProductQuickView from "./ProductQuickView";
 import AuthModal from "./AuthModal";
 
 interface ProductCardProps {
@@ -23,12 +22,11 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showQuickView, setShowQuickView] = useState(false);
 
   const handleAction = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setShowQuickView(true);
+    router.push(`/product/${product._id}`);
   };
 
   return (
@@ -43,7 +41,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           transition: { duration: 0.6, ease: [0.33, 1, 0.68, 1] }
         }}
         className="glass-card group overflow-hidden cursor-pointer relative transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] border-luxury-platinum/50 bg-white/40"
-        onClick={() => setShowQuickView(true)}
+        onClick={() => router.push(`/product/${product._id}`)}
       >
         {/* Luxury Gold Border Glow on Hover */}
         <div className="absolute inset-0 border border-luxury-gold opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-[1.5rem] z-20 pointer-events-none" />
@@ -80,7 +78,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
             <span className="text-luxury-dark text-[10px] font-bold uppercase tracking-widest bg-white/95 backdrop-blur-xl px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-2 border border-luxury-platinum/30">
-              Quick Preview <ArrowUpRight size={14} className="text-luxury-gold" />
+              View Showcase <ArrowUpRight size={14} className="text-luxury-gold" />
             </span>
           </div>
 
@@ -110,12 +108,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </div>
         </div>
       </motion.div>
-
-      <ProductQuickView 
-        isOpen={showQuickView} 
-        onClose={() => setShowQuickView(false)} 
-        product={product} 
-      />
 
       <AuthModal 
         isOpen={showAuthModal} 
