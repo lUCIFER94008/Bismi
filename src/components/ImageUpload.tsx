@@ -128,8 +128,8 @@ const ImageUpload = ({ value, onChange }: ImageUploadProps) => {
                 <Loader2 className="animate-spin text-luxury-gold" size={32} />
               ) : (
                 <>
-                  <Plus className="text-gray-500 mb-2" size={32} />
-                  <span className="text-[10px] uppercase font-bold text-gray-500 text-center">
+                  <Plus className="text-[#6B7280]" size={32} />
+                  <span className="text-[10px] uppercase font-bold text-[#6B7280] text-center">
                     Add Images ({value.length}/10)
                   </span>
                 </>
@@ -152,10 +152,10 @@ const ImageUpload = ({ value, onChange }: ImageUploadProps) => {
                 : "border-white/10 bg-white/5 hover:border-white/20"
             }`}
           >
-            <Upload className="text-gray-500 mb-4" size={48} />
-            <h3 className="text-xl font-bold mb-2 text-white italic">Upload Product Gallery</h3>
-            <p className="text-gray-500 text-sm">Drag & drop up to 10 images here</p>
-            <p className="text-gray-600 text-[10px] mt-4 uppercase tracking-widest font-bold">JPG, PNG, WEBP • MAX 10MB EACH</p>
+            <Upload className="text-[#6B7280] mb-4" size={48} />
+            <h3 className="text-xl font-bold mb-2 text-[#111111] italic">Upload Product Gallery</h3>
+            <p className="text-[#555555] text-sm">Drag & drop up to 10 images here</p>
+            <p className="text-[#6B7280] text-[10px] mt-4 uppercase tracking-widest font-bold">JPG, PNG, WEBP • MAX 10MB EACH</p>
           </motion.div>
         </div>
       )}

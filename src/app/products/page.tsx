@@ -119,6 +119,7 @@ const ProductsContent = () => {
                 placeholder="Search the collection..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                suppressHydrationWarning
                 className="glass-input w-full lg:w-[420px] pl-16 pr-14 py-6 text-[13px] font-black tracking-wide shadow-sm text-[#111111]"
               />
               <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-[#444444] group-focus-within:text-luxury-gold transition-colors duration-500" size={20} strokeWidth={2} />
@@ -136,31 +137,7 @@ const ProductsContent = () => {
         </div>
       </div>
 
-      {/* Category Filter Navigation */}
-      <div className="mb-24">
-        <div className="flex flex-wrap gap-4 items-center">
-          {categoryFilters.map((cat, i) => (
-            <ScrollReveal key={cat.name} delay={i * 0.03} direction="up">
-              <button
-                onClick={() => handleCategoryChange(cat.name)}
-                className={`group flex items-center gap-3.5 px-8 py-4 rounded-2xl text-[11px] font-bold uppercase tracking-[0.25em] transition-all border shadow-sm ${
-                  selectedCategory === cat.name 
-                    ? "bg-luxury-dark text-white border-luxury-dark scale-105 shadow-xl" 
-                    : "bg-white/80 text-[#444444] border-luxury-platinum/50 hover:border-luxury-gold hover:text-luxury-dark hover:bg-white"
-                }`}
-              >
-                <span className={`text-base transition-transform duration-500 group-hover:scale-125 ${selectedCategory === cat.name ? "" : "grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100"}`}>
-                  {cat.icon}
-                </span>
-                {cat.name}
-                <span className={`text-[9px] font-black ${selectedCategory === cat.name ? "text-luxury-gold" : "text-[#444444]"}`}>
-                  {cat.count}
-                </span>
-              </button>
-            </ScrollReveal>
-          ))}
-        </div>
-      </div>
+      {/* Category Filter Navigation removed in favor of Mega-Menu Navbar */}
 
       {/* Products Grid */}
       <AnimatePresence mode="wait">
@@ -188,7 +165,7 @@ const ProductsContent = () => {
                 transition: { staggerChildren: 0.08 }
               }
             }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-16"
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-12"
           >
             {products.map((product: any) => (
               <motion.div
@@ -235,7 +212,7 @@ const ProductsContent = () => {
 
 const ProductsPage = () => {
   return (
-    <main className="min-h-screen relative pt-40 bg-transparent">
+    <main className="min-h-screen relative pt-64 bg-transparent">
       <Navbar />
       <Suspense fallback={<div className="py-60 text-center"><Loader2 className="animate-spin mx-auto text-luxury-gold" size={48} /></div>}>
         <ProductsContent />

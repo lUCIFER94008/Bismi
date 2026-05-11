@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import PremiumBackground from "@/components/ui/PremiumBackground";
-import CustomCursor from "@/components/ui/CustomCursor";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,7 +47,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="selection:bg-luxury-gold selection:text-white">
       <body className={`${inter.className} bg-[#FDFBF7] text-luxury-dark min-h-screen antialiased`}>
-        <CustomCursor />
         <PremiumBackground />
         {children}
         <Toaster 

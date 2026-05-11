@@ -33,7 +33,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
             <button
               onClick={onClose}
               className="absolute top-6 right-6 p-2.5 hover:bg-luxury-pearl rounded-full transition-all text-luxury-dark/40 border border-luxury-platinum/30 shadow-sm"
-            >
+             >
               <X size={18} />
             </button>
 
@@ -46,8 +46,8 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
             <div className="space-y-4">
               <h2 className="text-4xl font-bold text-[#111111] tracking-tighter">PRIVATE <span className="text-luxury-gold italic">VAULT</span></h2>
-              <p className="text-[#444444] text-[13px] leading-relaxed font-bold">
-                Please authenticate to access the exclusive <span className="text-luxury-dark font-black">NEW BISMI GIFT HOUSE</span> collection.
+              <p className="text-[#333333] text-[13px] leading-relaxed font-bold">
+                Please authenticate to access the exclusive <span className="text-[#111111] font-black">NEW BISMI GIFT HOUSE</span> collection.
               </p>
             </div>
 
@@ -68,7 +68,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
             </div>
 
             <div className="pt-8 border-t border-luxury-platinum/20">
-              <p className="text-[9px] uppercase tracking-[0.6em] text-luxury-dark/30 font-bold">
+              <p className="text-[9px] uppercase tracking-[0.6em] text-[#6B7280] font-bold">
                 ESTABLISHED 2014 • PREEMINENT GIFT HOUSE
               </p>
             </div>

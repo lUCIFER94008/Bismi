@@ -93,14 +93,14 @@ const CategoryDropdown = ({ value, onChange }: CategoryDropdownProps) => {
         className="glass-input w-full flex items-center justify-between group transition-all duration-300 hover:border-luxury-gold/50 hover:shadow-[0_0_20px_rgba(212,175,55,0.1)] py-4"
       >
         <div className="flex items-center gap-3">
-          <span className="text-luxury-gold opacity-50">{getCategoryIcon(value)}</span>
-          <span className={`text-sm font-bold uppercase tracking-widest ${value ? "text-white" : "text-gray-500"}`}>
+          <span className="text-luxury-gold opacity-80">{getCategoryIcon(value)}</span>
+          <span className={`text-sm font-bold uppercase tracking-widest ${value ? "text-[#111111]" : "text-[#7C7C7C]"}`}>
             {value || "Select Masterpiece Category"}
           </span>
         </div>
         <ChevronDown
           size={18}
-          className={`text-gray-500 transition-transform duration-300 ${
+          className={`text-[#6B7280] transition-transform duration-300 ${
             isOpen ? "rotate-180 text-luxury-gold" : ""
           }`}
         />
@@ -112,17 +112,17 @@ const CategoryDropdown = ({ value, onChange }: CategoryDropdownProps) => {
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 5, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute z-[70] w-full mt-2 rounded-2xl overflow-hidden backdrop-blur-2xl bg-black/90 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
+            className="absolute z-[70] w-full mt-2 rounded-2xl overflow-hidden backdrop-blur-2xl bg-white/95 border border-[#E5E4E2] shadow-[0_20px_50px_rgba(0,0,0,0.1)]"
           >
             {/* Search Input */}
-            <div className="p-4 border-b border-white/5 bg-white/[0.02] flex items-center gap-3">
-              <Search size={18} className="text-luxury-gold/50" />
+            <div className="p-4 border-b border-[#E5E4E2] bg-[#F8F8F8] flex items-center gap-3">
+              <Search size={18} className="text-luxury-gold" />
               <input
                 type="text"
                 placeholder="Search collections..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="bg-transparent border-none outline-none text-xs font-bold uppercase tracking-widest w-full text-white placeholder:text-gray-600"
+                className="bg-transparent border-none outline-none text-xs font-bold uppercase tracking-widest w-full text-[#111111] placeholder:text-[#7C7C7C]"
                 autoFocus
               />
             </div>
@@ -146,10 +146,10 @@ const CategoryDropdown = ({ value, onChange }: CategoryDropdownProps) => {
                       setIsOpen(false);
                       setSearch("");
                     }}
-                    className={`w-full flex items-center justify-between px-5 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:bg-white/5 border-l-2 ${
+                    className={`w-full flex items-center justify-between px-5 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:bg-[#F8F8F8] border-l-2 ${
                       value === cat.name 
                         ? "text-luxury-gold bg-luxury-gold/5 border-luxury-gold" 
-                        : "text-gray-400 border-transparent hover:text-white"
+                        : "text-[#6B7280] border-transparent hover:text-[#111111]"
                     }`}
                   >
                     <div className="flex items-center gap-4">
@@ -161,7 +161,7 @@ const CategoryDropdown = ({ value, onChange }: CategoryDropdownProps) => {
                 ))
               ) : (
                 <div className="px-6 py-12 text-center">
-                  <p className="text-gray-600 text-[10px] uppercase tracking-widest font-bold mb-6">No matches in our vault</p>
+                  <p className="text-[#6B7280] text-[10px] uppercase tracking-widest font-bold mb-6">No matches in our vault</p>
                   {search.trim() && (
                     <button
                       type="button"

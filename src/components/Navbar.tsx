@@ -6,15 +6,17 @@ import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { LogOut, Menu, X, User as UserIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import CategoryNavbar from "./CategoryNavbar";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<{ name: string; role: string } | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -109,7 +111,7 @@ const Navbar = () => {
           {user ? (
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-luxury-pearl border border-luxury-platinum/50 shadow-sm">
-               <UserIcon size={14} className="text-luxury-gold" />
+                <UserIcon size={14} className="text-luxury-gold" />
                 <span className="text-[11px] font-black tracking-wider text-[#111111]">{user.name.split(' ')[0]}</span>
               </div>
               <button
@@ -135,6 +137,9 @@ const Navbar = () => {
           {isOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
+
+      {/* Luxury Category Navigation - Only Desktop & Only Products Page */}
+      {mounted && !isScrolled && pathname === "/products" && <CategoryNavbar />}
 
       {/* Mobile Menu */}
       <AnimatePresence>

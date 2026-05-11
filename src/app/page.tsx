@@ -16,6 +16,8 @@ import { CATEGORIES } from "@/constants/categories";
 
 import { getDynamicCategories } from "@/lib/categories";
 
+export const revalidate = 0; // Force dynamic rendering for real-time inventory sync
+
 export default async function Home() {
   let featuredProducts: any[] = [];
   let dynamicCategories: any[] = [];
@@ -67,23 +69,23 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Featured Products - Luxury Showroom */}
+      {/* Featured Vault - Latest Arrivals */}
       <section className="py-40 px-6 relative z-10 bg-transparent">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal direction="left">
             <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
               <div className="space-y-6">
-                <h2 className="text-6xl md:text-[5.5rem] font-bold tracking-tighter text-luxury-dark leading-[0.9]">
-                  CURATED <br />
-                  <span className="text-gold-gradient font-black italic uppercase">Vault</span>
+                <h2 className="text-6xl md:text-[5.5rem] font-bold tracking-tighter text-[#111111] leading-[0.9]">
+                  LATEST <br />
+                  <span className="text-gold-gradient font-black italic uppercase">Arrivals</span>
                 </h2>
                 <div className="flex items-center gap-6">
                   <div className="w-16 h-[1.5px] bg-luxury-gold" />
-                  <p className="text-luxury-dark/60 text-[11px] uppercase tracking-[0.5em] font-bold">Latest Masterpieces from the Collection</p>
+                  <p className="text-[#6B7280] text-[11px] uppercase tracking-[0.5em] font-black">Elite Collection Refresh</p>
                 </div>
               </div>
               <Magnetic>
-                <Link href="/products" className="hidden md:flex items-center gap-4 text-luxury-dark hover:text-luxury-gold transition-colors font-bold text-[11px] uppercase tracking-[0.4em] group pb-4 border-b border-luxury-platinum/50">
+                <Link href="/products" className="hidden md:flex items-center gap-4 text-[#111111] hover:text-luxury-gold transition-colors font-bold text-[11px] uppercase tracking-[0.4em] group pb-4 border-b border-luxury-platinum/50">
                   Enter Catalog <ArrowRight size={20} className="group-hover:translate-x-3 transition-transform duration-500" />
                 </Link>
               </Magnetic>
@@ -91,18 +93,16 @@ export default async function Home() {
           </ScrollReveal>
 
           <div className="relative group">
-            <div className="flex gap-10 overflow-x-auto pb-16 pt-4 hide-scrollbar snap-x-mandatory scroll-smooth" id="product-slider">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
               {featuredProducts.length > 0 ? (
                 featuredProducts.map((product: any, i: number) => (
-                  <div key={product._id} className="min-w-[320px] md:min-w-[420px] snap-center">
-                    <ScrollReveal delay={i * 0.1}>
-                      <ProductCard product={product} />
-                    </ScrollReveal>
-                  </div>
+                  <ScrollReveal key={product._id} delay={i * 0.1}>
+                    <ProductCard product={product} />
+                  </ScrollReveal>
                 ))
               ) : (
-                <div className="w-full py-48 text-center glass-card border-luxury-platinum/50 bg-white/40">
-                  <p className="text-luxury-dark font-bold text-xl uppercase tracking-[0.4em]">The vault is currently being curated.</p>
+                <div className="col-span-full py-48 text-center glass-card border-luxury-platinum/50 bg-white/40">
+                  <p className="text-[#111111] font-bold text-xl uppercase tracking-[0.4em]">The vault is currently being curated.</p>
                 </div>
               )}
             </div>
@@ -110,31 +110,31 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Categories Section - The Gift House */}
-      <section className="py-40 px-6 relative z-10 overflow-hidden bg-luxury-pearl/50 border-y border-luxury-platinum/30 backdrop-blur-3xl">
+      {/* Categories Section - Dynamic Highlights */}
+      <section className="py-40 px-6 relative z-10 overflow-hidden bg-luxury-pearl/50 border-y border-[#E5E4E2] backdrop-blur-3xl">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
             <div className="text-center mb-24 space-y-4">
-              <h2 className="text-6xl md:text-8xl font-bold tracking-tighter text-luxury-dark leading-[0.9]">
-                BROWSE <span className="text-gold-gradient italic font-black">COLLECTIONS</span>
+              <h2 className="text-6xl md:text-8xl font-bold tracking-tighter text-[#111111] leading-[0.9]">
+                ELITE <span className="text-gold-gradient italic font-black">DEPARTMENTS</span>
               </h2>
-              <p className="text-luxury-dark/60 text-[11px] uppercase tracking-[0.6em] font-bold">Explore Our Dynamic Departments</p>
+              <p className="text-[#6B7280] text-[11px] uppercase tracking-[0.6em] font-black">Explore Our Collection by Category</p>
             </div>
           </ScrollReveal>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-8">
-            {dynamicCategories.map((cat, i) => (
+            {dynamicCategories.slice(0, 11).map((cat, i) => (
               <CategoryCard key={cat.name} name={cat.name} icon={cat.icon} delay={i * 0.05} />
             ))}
-            <ScrollReveal delay={dynamicCategories.length * 0.05}>
+            <ScrollReveal delay={Math.min(dynamicCategories.length, 11) * 0.05}>
               <Link 
                 href="/products"
-                className="glass-card p-10 h-full flex flex-col items-center justify-center text-center group border-luxury-platinum/50 bg-white/80 hover:bg-white hover:border-luxury-gold transition-all duration-700 shadow-sm"
+                className="glass-card p-10 h-full flex flex-col items-center justify-center text-center group border-[#E5E4E2] bg-white/80 hover:bg-white hover:border-luxury-gold transition-all duration-700 shadow-sm"
               >
                 <div className="w-16 h-16 rounded-full bg-luxury-pearl border border-luxury-platinum/50 flex items-center justify-center mb-6 group-hover:bg-luxury-dark group-hover:text-white transition-all duration-500 shadow-inner">
                   <ArrowRight className="group-hover:translate-x-1 transition-transform" size={24} />
                 </div>
-                <span className="font-bold tracking-[0.3em] uppercase text-[11px] text-luxury-dark">All Collections</span>
+                <span className="font-black tracking-[0.3em] uppercase text-[11px] text-[#111111]">All Categories</span>
               </Link>
             </ScrollReveal>
           </div>

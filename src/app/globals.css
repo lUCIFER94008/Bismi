@@ -4,15 +4,19 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   
-  --color-luxury-gold: #C5A059;
+  --color-luxury-gold: #C8A14B;
   --color-luxury-platinum: #E5E4E2;
   --color-luxury-pearl: #F8F8F8;
   --color-luxury-silver: #D9D9D9;
   --color-luxury-dark: #111111;
-  --color-luxury-glass: rgba(255, 255, 255, 0.8);
-  --color-luxury-text-primary: #111111;
-  --color-luxury-text-secondary: #444444;
-  --color-luxury-text-muted: #666666;
+  --color-luxury-glass: rgba(255, 255, 255, 0.9);
+  
+  --color-text-primary: #111111;
+  --color-text-secondary: #333333;
+  --color-text-muted: #555555;
+  --color-text-label: #6B7280;
+  --color-text-placeholder: #7C7C7C;
+  --color-text-accent: #C8A14B;
 
   /* Legacy color support */
   --color-luxury-gold-v3: #D4AF37;
@@ -20,8 +24,8 @@
   --color-luxury-black-v3: #0F0F0F;
   --color-luxury-dark-v3: #1A1A1A;
 
-  --background-image-glass-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.4));
-  --background-image-glass-v3: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+  --background-image-glass-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+  --background-image-glass-v3: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
   
   --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-float: float 6s ease-in-out infinite;
@@ -59,11 +63,11 @@ body {
 }
 
 @utility glass-card {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(24px);
-  border: 1px solid rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(200, 161, 75, 0.2);
   border-radius: 1.5rem;
-  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.12);
 }
 
 @utility glass-navbar {
@@ -73,17 +77,23 @@ body {
 }
 
 @utility glass-input {
-  background-color: rgba(248, 248, 248, 0.8);
+  background-color: #ffffff;
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(229, 228, 226, 0.8);
+  border: 1px solid #E5E4E2;
   border-radius: 1rem;
   padding: 0.875rem 1.25rem;
   outline: none;
+  color: #111111;
+  font-weight: 500;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  &::placeholder {
+    color: #7C7C7C;
+    opacity: 1;
+  }
   &:focus {
-    border-color: #C5A059;
+    border-color: #C8A14B;
     background-color: #ffffff;
-    box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.1);
+    box-shadow: 0 0 0 4px rgba(200, 161, 75, 0.15), 0 4px 12px rgba(200, 161, 75, 0.1);
   }
 }
 

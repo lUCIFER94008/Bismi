@@ -22,7 +22,13 @@ export async function GET(req: Request) {
 
     // Sort by newest first
     const products = await Product.find(query).sort({ createdAt: -1 }).lean();
-    return NextResponse.json(products, { status: 200 });
+    
+    return NextResponse.json(products, { 
+      status: 200,
+      headers: {
+        'Cache-Control': 'no-store, max-age=0',
+      }
+    });
   } catch (error) {
     console.error("Fetch products error:", error);
     return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });
