@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
@@ -58,17 +58,17 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-6">
-      <div className="max-w-7xl mx-auto flex items-center justify-between glass-card px-4 sm:px-8 border-luxury-platinum/50 py-4 shadow-xl">
-        <Link href="/" className="flex items-center gap-4 min-w-[200px] md:min-w-[340px] group">
-          <div className="rounded-2xl overflow-hidden bg-white shadow-sm border border-luxury-platinum/30 transition-all duration-700 relative shrink-0 w-12 h-12">
+    <nav className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-6 pointer-events-none">
+      <div className="max-w-7xl mx-auto flex items-center justify-between glass-card px-4 sm:px-8 border-luxury-platinum/50 py-4 shadow-lg pointer-events-auto">
+        <Link href="/" prefetch={true} className="flex items-center gap-4 min-w-[200px] md:min-w-[340px] group">
+          <div className="rounded-2xl overflow-hidden bg-white shadow-sm border border-luxury-platinum/30 transition-transform duration-500 relative shrink-0 w-12 h-12">
             <Image 
               src="https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png" 
               alt="NEW BISMI Logo" 
               fill
               priority
               className="object-contain p-1"
-              sizes="(max-width: 768px) 40px, 48px"
+              sizes="48px"
             />
           </div>
           <div className="flex flex-col">
@@ -79,19 +79,20 @@ const Navbar = () => {
           </div>
         </Link>
 
-        {/* Desktop Links */}
+        {/* Desktop Links - Prefetch Enabled */}
         <div className="hidden lg:flex items-center gap-10">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
+              prefetch={true}
               className={`text-[11px] font-black uppercase tracking-[0.25em] transition-all duration-300 hover:text-luxury-gold relative group ${
                 pathname === link.href ? "text-[#111111]" : "text-[#444444]"
               }`}
             >
               {link.name}
               <div 
-                className={`absolute -bottom-2 left-0 right-0 h-[1.5px] bg-luxury-gold transition-all duration-400 ${pathname === link.href ? "opacity-100" : "opacity-0 group-hover:opacity-100 scale-x-0 group-hover:scale-x-100"}`}
+                className={`absolute -bottom-2 left-0 right-0 h-[1.5px] bg-luxury-gold transition-all duration-300 ${pathname === link.href ? "opacity-100" : "opacity-0 group-hover:opacity-100 scale-x-0 group-hover:scale-x-100"}`}
               />
             </Link>
           ))}
@@ -101,20 +102,20 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-6">
           {user ? (
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-luxury-pearl border border-luxury-platinum/50 shadow-sm">
+              <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-luxury-pearl border border-luxury-platinum/30 shadow-sm">
                 <UserIcon size={14} className="text-luxury-gold" />
                 <span className="text-[11px] font-black tracking-wider text-[#111111]">{user.name.split(' ')[0]}</span>
               </div>
               <button
                 onClick={handleLogout}
-                className="w-10 h-10 flex items-center justify-center rounded-2xl bg-red-50 text-red-500 border border-red-100 hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm"
+                className="w-10 h-10 flex items-center justify-center rounded-2xl bg-red-50 text-red-500 border border-red-100 hover:bg-red-500 hover:text-white transition-colors duration-300 shadow-sm"
                 title="Logout"
               >
                 <LogOut size={18} />
               </button>
             </div>
           ) : (
-            <Link href="/login" className="btn-luxury py-2.5 text-[11px] px-8 tracking-widest uppercase">
+            <Link href="/login" prefetch={true} className="btn-luxury py-2.5 text-[11px] px-8 tracking-widest uppercase">
               Enter Vault
             </Link>
           )}
@@ -129,23 +130,32 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Luxury Category Navigation - Only Desktop & Only Products Page */}
-      {mounted && pathname === "/products" && <CategoryNavbar />}
+      {/* Luxury Category Navigation */}
+      {mounted && pathname === "/products" && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <CategoryNavbar />
+        </motion.div>
+      )}
 
       {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -20 }}
+            initial={{ opacity: 0, scale: 0.98, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: -20 }}
-            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-            className="lg:hidden absolute top-28 left-6 right-6 p-8 glass-card border-luxury-platinum/50 shadow-2xl flex flex-col gap-6"
+            exit={{ opacity: 0, scale: 0.98, y: -10 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="lg:hidden absolute top-28 left-6 right-6 p-8 glass-card border-luxury-platinum/50 shadow-2xl flex flex-col gap-6 pointer-events-auto"
           >
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
+                prefetch={true}
                 onClick={() => setIsOpen(false)}
                 className={`text-sm font-bold uppercase tracking-widest ${
                   pathname === link.href ? "text-luxury-gold" : "text-luxury-dark/70"
@@ -174,6 +184,7 @@ const Navbar = () => {
               ) : (
                 <Link
                   href="/login"
+                  prefetch={true}
                   onClick={() => setIsOpen(false)}
                   className="btn-luxury w-full text-center tracking-widest uppercase"
                 >
@@ -188,4 +199,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default memo(Navbar);

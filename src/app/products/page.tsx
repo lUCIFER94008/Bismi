@@ -7,43 +7,39 @@ import ProductCard from "@/components/ProductCard";
 import { Search, Loader2, X } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { CATEGORIES } from "@/constants/categories";
 import ScrollReveal from "@/components/ScrollReveal";
 
 const ProductsContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [products, setProducts] = useState([]);
-  const [dbCategories, setDbCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [totalProductsCount, setTotalProductsCount] = useState(0);
   
   const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "All");
+
+  // Debounced search to prevent API spam
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const currentSearch = searchParams.get("search") || "";
+      if (searchTerm !== currentSearch) {
+        updateFilters(selectedCategory, searchTerm);
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm, selectedCategory]);
 
   useEffect(() => {
     setSelectedCategory(searchParams.get("category") || "All");
     setSearchTerm(searchParams.get("search") || "");
   }, [searchParams]);
 
-  const fetchCategories = useCallback(async () => {
-    try {
-      const res = await fetch("/api/categories?withCounts=true");
-      const data = await res.json();
-      if (data.categories) {
-        setDbCategories(data.categories);
-        setTotalProductsCount(data.totalCount);
-      }
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  }, []);
-
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     const query = new URLSearchParams();
     if (selectedCategory !== "All") query.set("category", selectedCategory);
-    if (searchTerm) query.set("search", searchTerm);
+    const search = searchParams.get("search");
+    if (search) query.set("search", search);
 
     try {
       const res = await fetch(`/api/products?${query.toString()}`);
@@ -54,11 +50,7 @@ const ProductsContent = () => {
     } finally {
       setLoading(false);
     }
-  }, [selectedCategory, searchTerm]);
-
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
+  }, [selectedCategory, searchParams]);
 
   useEffect(() => {
     fetchProducts();
@@ -138,7 +130,7 @@ const ProductsContent = () => {
             key="products"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.4 }}
             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-12"
           >
             {products.map((product: any) => (

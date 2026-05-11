@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Phone, MapPin, Globe, Mail } from "lucide-react";
+import { memo } from "react";
 
 const Footer = () => {
   return (
@@ -8,7 +9,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-20 mb-24">
         {/* Brand */}
         <div className="space-y-8">
-          <Link href="/" className="flex flex-col gap-4 group">
+          <Link href="/" prefetch={true} className="flex flex-col gap-4 group">
             <div className="w-12 h-12 relative rounded-2xl overflow-hidden bg-white border border-luxury-platinum/50 shadow-sm p-1 group-hover:scale-110 transition-transform duration-500">
               <Image 
                 src="https://res.cloudinary.com/dpmpefw2p/image/upload/v1777816907/ChatGPT_Image_May_2_2026_10_10_10_PM_tmkr5c.png" 
@@ -40,8 +41,8 @@ const Footer = () => {
         <div className="space-y-8">
           <h4 className="font-bold uppercase tracking-[0.3em] text-[11px] text-[#111111]">The Vault</h4>
           <ul className="space-y-5 text-[#333333] text-[13px] font-bold">
-            <li><Link href="/" className="hover:text-luxury-gold transition-colors">Gift House Home</Link></li>
-            <li><Link href="/products" className="hover:text-luxury-gold transition-colors">Full Collection</Link></li>
+            <li><Link href="/" prefetch={true} className="hover:text-luxury-gold transition-colors">Gift House Home</Link></li>
+            <li><Link href="/products" prefetch={true} className="hover:text-luxury-gold transition-colors">Full Collection</Link></li>
             <li><a href="#contact" className="hover:text-luxury-gold transition-colors">Private Inquiry</a></li>
           </ul>
         </div>
@@ -50,10 +51,10 @@ const Footer = () => {
         <div className="space-y-8">
           <h4 className="font-bold uppercase tracking-[0.3em] text-[11px] text-[#111111]">Collections</h4>
           <ul className="space-y-5 text-[#333333] text-[13px] font-bold">
-            <li><Link href="/products?category=Toys" className="hover:text-luxury-gold transition-colors">Masterpiece Toys</Link></li>
-            <li><Link href="/products?category=Watches" className="hover:text-luxury-gold transition-colors">Elite Horology</Link></li>
-            <li><Link href="/products?category=Diecast" className="hover:text-luxury-gold transition-colors">Precision Diecast</Link></li>
-            <li><Link href="/products?category=Crockery" className="hover:text-luxury-gold transition-colors">Luxury Living</Link></li>
+            <li><Link href="/products?category=Toys" prefetch={true} className="hover:text-luxury-gold transition-colors">Masterpiece Toys</Link></li>
+            <li><Link href="/products?category=Watches" prefetch={true} className="hover:text-luxury-gold transition-colors">Elite Horology</Link></li>
+            <li><Link href="/products?category=Diecast" prefetch={true} className="hover:text-luxury-gold transition-colors">Precision Diecast</Link></li>
+            <li><Link href="/products?category=Crockery" prefetch={true} className="hover:text-luxury-gold transition-colors">Luxury Living</Link></li>
           </ul>
         </div>
 
@@ -92,4 +93,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default memo(Footer);
