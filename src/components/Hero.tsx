@@ -78,7 +78,7 @@ const Hero = () => {
           {[
             { label: "Elite Category", title: "Masterpiece Diecast", h: "h-56", img: "/hero/diecast.png" },
             { label: "Featured Collections", title: "Luxury Horology", h: "h-72", active: true, img: "/hero/watches.png" },
-            { label: "New Acquisition", title: "Precision Models", h: "h-56", img: "/hero/remote.png" }
+            { label: "New Acquisition", title: "Precision Models", h: "h-56", img: "/hero/precision_car.png" }
           ].map((card, i) => (
             <motion.div
               key={card.title}

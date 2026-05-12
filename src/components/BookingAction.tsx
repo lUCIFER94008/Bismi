@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { ShoppingCart, Share2 } from "lucide-react";
 import BookingModal from "./BookingModal";
-import AuthModal from "./AuthModal";
 
 interface BookingActionProps {
   product: {
@@ -16,18 +15,8 @@ interface BookingActionProps {
 
 const BookingAction = ({ product }: BookingActionProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-
-  const isAuthenticated = () => {
-    if (typeof window === "undefined") return false;
-    return !!localStorage.getItem("token");
-  };
 
   const handleBooking = () => {
-    if (!isAuthenticated()) {
-      setShowAuthModal(true);
-      return;
-    }
     setIsModalOpen(true);
   };
 
@@ -53,11 +42,6 @@ const BookingAction = ({ product }: BookingActionProps) => {
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
         product={product} 
-      />
-
-      <AuthModal 
-        isOpen={showAuthModal} 
-        onClose={() => setShowAuthModal(false)} 
       />
     </>
   );
